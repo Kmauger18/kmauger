@@ -78,3 +78,4 @@ a.book:hover .link{color:var(--muted)}
 .mini-books span{font:400 18px var(--serif)}
 @media(max-width:850px){.book-detail{grid-template-columns:1fr;gap:34px}.book-detail-cover{position:static;max-width:300px}.mini-books{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:560px){.book-infos{grid-template-columns:1fr}.book-desc p{font-size:17px}.book-page{padding-top:34px}}
+img[data-img="carte_livres"],img[data-img="livres_banniere"]{filter:none!important}
