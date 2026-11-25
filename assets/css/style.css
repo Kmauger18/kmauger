@@ -55,3 +55,26 @@ footer{border-top:1px solid var(--line);padding:28px 0}.foot{display:flex;justif
 body.lb-open{overflow:hidden}
 @media(max-width:850px){.books{grid-template-columns:1fr}}
 @media(max-width:560px){.book{grid-template-columns:120px 1fr;gap:18px}.book-body h3{font-size:23px}.lightbox{padding:30px 10px}.tile.tall{height:360px}}
+/* ---------- Livres : liste cliquable et fiche ---------- */
+a.book{color:inherit}a.book .cover{transition:transform .35s,box-shadow .35s}a.book:hover .cover{transform:translateY(-4px);box-shadow:0 22px 40px -20px rgba(0,0,0,.5)}
+a.book:hover .link{color:var(--muted)}
+.book-hook{font:italic 17px/1.5 var(--serif);color:#444;margin:0 0 12px}
+.book-page{padding:50px 0 30px}
+.back{display:inline-block;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:34px}.back:hover{color:var(--ink)}
+.book-detail{display:grid;grid-template-columns:minmax(240px,380px) 1fr;gap:70px;align-items:start}
+.book-detail-cover{position:sticky;top:120px}.cover.big{box-shadow:0 30px 60px -28px rgba(0,0,0,.55)}
+.book-title{font:400 clamp(42px,5.5vw,74px)/1 var(--serif);letter-spacing:-.035em;margin:14px 0 10px}
+.book-author{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:#555;margin:0 0 18px}
+.book-desc{margin:30px 0;max-width:620px}.book-desc p{font:400 19px/1.65 var(--serif);color:#333;margin:0 0 18px}
+.book-buy{display:flex;flex-wrap:wrap;gap:12px;align-items:center}.book-buy .btn{margin-top:0}
+.btn-solid{background:var(--ink);color:var(--paper)}.btn-solid:hover{background:#000}
+.soon-buy{font-size:13px;color:var(--muted);margin:0}.soon-buy a{border-bottom:1px solid}
+.book-infos{display:grid;grid-template-columns:repeat(2,1fr);gap:0 30px;margin:40px 0 0;border-top:1px solid var(--line);max-width:620px}
+.book-infos div{display:flex;justify-content:space-between;gap:16px;padding:13px 0;border-bottom:1px solid var(--line)}
+.book-infos dt{font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}.book-infos dd{margin:0;font-size:13px;text-align:right}
+.more-books{border-top:1px solid var(--line)}
+.mini-books{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-top:30px}
+.mini-books a{display:grid;gap:12px}.mini-books .cover{transition:transform .3s}.mini-books a:hover .cover{transform:translateY(-4px)}
+.mini-books span{font:400 18px var(--serif)}
+@media(max-width:850px){.book-detail{grid-template-columns:1fr;gap:34px}.book-detail-cover{position:static;max-width:300px}.mini-books{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.book-infos{grid-template-columns:1fr}.book-desc p{font-size:17px}.book-page{padding-top:34px}}

@@ -2,6 +2,7 @@
 // Tant que Firebase n'est pas configuré ou que la base est vide, le site garde
 // le contenu écrit dans index.html : ce fichier ne change alors rien.
 import { firebaseConfig, firebaseActif, FIREBASE_SDK } from '../../firebase-config.js';
+import { definirLivres } from './livres.js';
 
 const esc = t => String(t ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 // *mot* → italique, retour à la ligne → <br>
@@ -11,7 +12,6 @@ const $$ = s => [...document.querySelectorAll(s)];
 const lienSur = u => /^(https?:\/\/|mailto:)/i.test(u || '') ? u : '';
 
 export const CATEGORIES_PHOTO = { paysages: 'Paysages', lumieres: 'Lumières', atmospheres: 'Atmosphères', portraits: 'Portraits', macro: 'Macro', urbain: 'Urbain', autres: 'Autres' };
-const STATUTS_LIVRE = { disponible: 'Disponible', bientot: 'Bientôt', ecriture: 'En écriture' };
 const TYPES_PROJET = { site: 'Site web', application: 'Application', jeu: 'Jeu', autre: 'Projet' };
 
 // ---------------------------------------------------------------- Textes, liens, images
@@ -37,21 +37,6 @@ function appliquerImage(cle, src) {
 }
 
 // ---------------------------------------------------------------- Listes
-function rendreLivres(el, livres) {
-  el.innerHTML = livres.length ? livres.map(l => {
-    const lien = lienSur(l.lien);
-    return `<article class="book">
-      ${l.couverture ? `<div class="cover"><img src="${esc(l.couverture)}" alt="Couverture de ${esc(l.titre)}" loading="lazy"></div>`
-        : `<div class="cover cover-type"><span>${esc(l.titre)}</span><small>Kéliann Mauger</small></div>`}
-      <div class="book-body">
-        ${STATUTS_LIVRE[l.statut] ? `<span class="pill ${esc(l.statut)}">${STATUTS_LIVRE[l.statut]}</span>` : ''}
-        <h3>${esc(l.titre)}</h3>
-        <p class="book-meta">${[l.genre, l.annee].filter(Boolean).map(esc).join(' · ')}</p>
-        ${l.resume ? `<div class="book-text">${para(l.resume)}</div>` : ''}
-        ${lien ? `<a class="btn btn-small" href="${esc(lien)}" target="_blank" rel="noopener">${esc(l.libelleLien || 'Se procurer le livre')} ↗</a>` : ''}
-      </div></article>`;
-  }).join('') : '<p class="soon">Les livres arrivent bientôt.</p>';
-}
 function rendrePhotos(el, photos) {
   el.innerHTML = photos.length ? photos.map(p => `
     <figure class="shot" data-c="${esc(p.categorie)}"><div class="tile"><img src="${esc(p.apercu)}" alt="${esc(p.legende || CATEGORIES_PHOTO[p.categorie] || '')}" loading="lazy"${p.hd ? ` data-hd="${esc(p.id)}"` : ''}></div>
@@ -105,7 +90,7 @@ async function demarrer() {
     .catch(e => console.warn('Images non chargées', e));
 
   const listes = [
-    ['liste-livres', 'livres', rendreLivres],
+    ['liste-livres', 'livres', (el, l) => definirLivres(l)],
     ['galerie-photos', 'photos', rendrePhotos],
     ['liste-projets', 'projets', rendreProjets],
     ['liste-cosplay', 'cosplays', rendreCosplays],

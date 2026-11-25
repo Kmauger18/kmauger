@@ -6,9 +6,12 @@ const menu = document.getElementById('menu');
 
 function showPage() {
   let id = location.hash.slice(1) || 'accueil';
+  if (id.startsWith('livre/')) id = 'livre';
   if (!document.getElementById(id)?.classList.contains('page')) id = 'accueil';
   pages.forEach(p => p.classList.toggle('active', p.id === id));
-  links.forEach(a => a.classList.toggle('active', a.hash === '#' + id));
+  const rubrique = id === 'livre' ? 'livres' : id;
+  links.forEach(a => a.classList.toggle('active', a.hash === '#' + rubrique));
+  if (id === 'livre') { nav.classList.remove('open'); menu.setAttribute('aria-expanded', 'false'); window.scrollTo({ top: 0, behavior: 'instant' }); return; }
   nav.classList.remove('open');
   menu.setAttribute('aria-expanded', 'false');
   window.scrollTo({ top: 0, behavior: 'instant' });
