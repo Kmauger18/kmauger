@@ -31,3 +31,27 @@ Chaque commit sur la branche `main` met le site à jour en une à deux minutes.
 python3 -m http.server 8000
 # puis ouvrir http://localhost:8000
 ```
+
+
+## Publication (vraies adresses par page)
+
+Le site est publié par **GitHub Actions** (`.github/workflows/publier.yml`) : `outils/generer.mjs`
+transforme le modèle `outils/modele.html` en une page HTML par adresse (`livres/`, `livres/<livre>/`,
+`projets/<catégorie>/<projet>/`…), avec titre, description, image de partage et données structurées
+propres à chaque page, plus `sitemap.xml`, `robots.txt` et `404.html`.
+
+La publication se relance à chaque modification du dépôt, chaque nuit (pour intégrer les livres et
+projets ajoutés dans l'espace de gestion) et à la demande : onglet **Actions → Publier le site → Run workflow**.
+
+Tester en local : `node outils/generer.mjs --sortie _site` puis servir le dossier `_site`.
+
+## Passer au nom de domaine kmauger.com
+
+1. Acheter le domaine, puis chez le registraire créer les enregistrements DNS :
+   - `A` sur `@` vers `185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153` ;
+   - `CNAME` sur `www` vers `kmauger18.github.io`.
+2. Dans GitHub : **Settings → Pages → Custom domain** → `kmauger.com` → Save, puis cocher **Enforce HTTPS**.
+
+C'est tout : la publication suivante utilise automatiquement `https://kmauger.com/` dans les liens
+canoniques, le sitemap et les images de partage, et les anciennes adresses `kmauger18.github.io/kmauger/…`
+redirigent vers le domaine.

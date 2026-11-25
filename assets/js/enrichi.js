@@ -1,7 +1,7 @@
 // Blocs calculés à partir des données du site : à la une, chiffres, derniers projets,
 // technologies, thèmes photo, univers. Ils se mettent à jour quand la base est chargée.
-import { livresCourants, STATUTS_LIVRE } from './livres.js?v=202611252026';
-import { projetsCourants, carteProjet, STATUTS } from './projets.js?v=202611252026';
+import { livresCourants, STATUTS_LIVRE } from './livres.js?v=202611252049';
+import { projetsCourants, carteProjet, STATUTS, lienProjet } from './projets.js?v=202611252049';
 
 const esc = t => String(t ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const fmt = t => esc(t).replace(/\*([^*\n]+)\*/g, '<em>$1</em>').replace(/\n/g, '<br>');
@@ -37,13 +37,13 @@ function rendre() {
     if (une) {
       const amazon = lienSur(une.lienAmazon), coollibri = lienSur(une.lienCoolLibri);
       $('home-une').innerHTML = `<div class="feature-book">
-        <a class="cover big" href="#livre/${esc(une.id)}">${une.couverture ? `<img src="${esc(une.couverture)}" alt="Couverture de ${esc(une.titre)}">` : `<span>${esc(une.titre)}</span>`}</a>
+        <a class="cover big" href="livres/${esc(une.id)}/">${une.couverture ? `<img src="${esc(une.couverture)}" alt="Couverture de ${esc(une.titre)}">` : `<span>${esc(une.titre)}</span>`}</a>
         <div>
           <div class="eyebrow">${esc([une.genre, STATUTS_LIVRE[une.statut]].filter(Boolean).join(' · '))}</div>
           <h2 class="book-title">${esc(une.titre)}</h2>
           ${une.accroche ? `<p class="project-hook">${fmt(une.accroche)}</p>` : ''}
           <p class="feature-text">${fmt(premierPara(une.description).replace(une.accroche || '§§', '').trim())}</p>
-          <div class="book-buy"><a class="btn btn-solid" href="#livre/${esc(une.id)}">Découvrir le livre <span>→</span></a>
+          <div class="book-buy"><a class="btn btn-solid" href="livres/${esc(une.id)}/">Découvrir le livre <span>→</span></a>
           ${amazon ? `<a class="btn" href="${esc(amazon)}" target="_blank" rel="noopener">Amazon <span>↗</span></a>` : ''}
           ${coollibri ? `<a class="btn" href="${esc(coollibri)}" target="_blank" rel="noopener">CoolLibri <span>↗</span></a>` : ''}</div>
         </div></div>`;
@@ -78,7 +78,7 @@ function rendre() {
     $('projets-une-wrap').hidden = !r;
     if (r) {
       const c = categories.find(x => x.id === r.categorie);
-      $('projets-une').innerHTML = `<a class="feature-project" href="#projet/${esc(r.slug)}">
+      $('projets-une').innerHTML = `<a class="feature-project" href="${esc(lienProjet(r))}">
         <div class="tile">${r.image ? `<img src="${esc(r.image)}" alt="${esc(r.titre)}">` : ''}</div>
         <div>
           <div class="eyebrow">${esc([c?.titre, r.plateforme, STATUTS[r.statut]].filter(Boolean).join(' · '))}</div>
@@ -102,10 +102,10 @@ function rendre() {
   if ($('apropos-univers')) {
     const n = nbCosplays();
     const lignes = [
-      ['#livres', 'Livres & écriture', `${livres.length} roman${livres.length > 1 ? 's' : ''}`],
-      ['#photographie', 'Photographie', `${nbPhotos()} photo${nbPhotos() > 1 ? 's' : ''}`],
-      ['#projets', 'Projets numériques', `${realisations.length} projet${realisations.length > 1 ? 's' : ''}`],
-      ['#cosplay', 'Cosplay', n ? `${n} cosplay${n > 1 ? 's' : ''}` : 'Bientôt'],
+      ['livres/', 'Livres & écriture', `${livres.length} roman${livres.length > 1 ? 's' : ''}`],
+      ['photographie/', 'Photographie', `${nbPhotos()} photo${nbPhotos() > 1 ? 's' : ''}`],
+      ['projets/', 'Projets numériques', `${realisations.length} projet${realisations.length > 1 ? 's' : ''}`],
+      ['cosplay/', 'Cosplay', n ? `${n} cosplay${n > 1 ? 's' : ''}` : 'Bientôt'],
     ];
     $('apropos-univers').innerHTML = lignes.map(([h, t, d], i) => `<a href="${h}"><span class="num">${String(i + 1).padStart(2, '0')}</span><b>${esc(t)}</b><small>${esc(d)}</small><i>→</i></a>`).join('');
   }

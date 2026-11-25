@@ -1,4 +1,4 @@
-// Livres : liste de la page Livres et fiche détaillée (#livre/<identifiant>).
+// Livres : liste de la page Livres et fiche détaillée (adresse livres/<identifiant>/).
 // Les données d'origine sont ici ; cms.js les remplace par celles de la base
 // dès que l'espace de gestion a été utilisé.
 
@@ -66,7 +66,7 @@ function rendreListe() {
   const el = document.getElementById('liste-livres');
   if (!el) return;
   el.innerHTML = livres.length ? livres.map(l => `
-    <a class="book" href="#livre/${esc(l.id)}">
+    <a class="book" href="livres/${esc(l.id)}/">
       ${couverture(l)}
       <div class="book-body">
         ${STATUTS_LIVRE[l.statut] ? `<span class="pill ${esc(l.statut)}">${STATUTS_LIVRE[l.statut]}</span>` : ''}
@@ -79,12 +79,12 @@ function rendreListe() {
 }
 
 function rendreFiche() {
-  const m = location.hash.match(/^#livre\/(.+)$/);
+  const m = (document.body.dataset.route || '').match(/^livres\/(.+)$/);
   const el = document.getElementById('fiche-livre');
   if (!m || !el) return;
   const l = livres.find(x => x.id === decodeURIComponent(m[1]));
   if (!l) {
-    el.innerHTML = `<section class="wrap page-hero"><a class="back" href="#livres">← Tous les livres</a><h1 class="display">Livre<br><em>introuvable.</em></h1></section>`;
+    el.innerHTML = `<section class="wrap page-hero"><a class="back" href="livres/">← Tous les livres</a><h1 class="display">Livre<br><em>introuvable.</em></h1></section>`;
     return;
   }
   document.title = l.titre + ' — KMAUGER.';
@@ -96,7 +96,7 @@ function rendreFiche() {
   const autres = livres.filter(x => x.id !== l.id).slice(0, 4);
   el.innerHTML = `
     <section class="wrap book-page">
-      <a class="back" href="#livres">← Tous les livres</a>
+      <a class="back" href="livres/">← Tous les livres</a>
       <div class="book-detail">
         <div class="book-detail-cover">${couverture(l, 'big')}</div>
         <div class="book-detail-body">
@@ -108,14 +108,14 @@ function rendreFiche() {
           <div class="book-buy">
             ${amazon ? `<a class="btn btn-solid" href="${esc(amazon)}" target="_blank" rel="noopener">Acheter sur Amazon <span>↗</span></a>` : ''}
             ${coollibri ? `<a class="btn" href="${esc(coollibri)}" target="_blank" rel="noopener">Acheter sur CoolLibri <span>↗</span></a>` : ''}
-            ${!amazon && !coollibri ? `<p class="soon-buy">${l.statut === 'ecriture' ? 'En cours d’écriture.' : 'Bientôt disponible.'} Suis l’actualité du livre sur <a href="#contact">mes réseaux</a>.</p>` : ''}
+            ${!amazon && !coollibri ? `<p class="soon-buy">${l.statut === 'ecriture' ? 'En cours d’écriture.' : 'Bientôt disponible.'} Suis l’actualité du livre sur <a href="contact/">mes réseaux</a>.</p>` : ''}
           </div>
           ${infos.length ? `<dl class="book-infos">${infos.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>` : ''}
         </div>
       </div>
     </section>
     ${autres.length ? `<section class="wrap content more-books"><div class="eyebrow">Du même auteur</div><h2 class="section-title">Les autres livres</h2>
-      <div class="mini-books">${autres.map(x => `<a href="#livre/${esc(x.id)}">${couverture(x)}<span>${esc(x.titre)}</span></a>`).join('')}</div></section>` : ''}`;
+      <div class="mini-books">${autres.map(x => `<a href="livres/${esc(x.id)}/">${couverture(x)}<span>${esc(x.titre)}</span></a>`).join('')}</div></section>` : ''}`;
 }
 
 export function definirLivres(liste) {
@@ -126,6 +126,4 @@ export function definirLivres(liste) {
 }
 export const livresCourants = () => livres;
 
-window.addEventListener('hashchange', rendreFiche);
-rendreListe();
-rendreFiche();
+if (typeof document !== 'undefined') { rendreListe(); rendreFiche(); }

@@ -1,11 +1,11 @@
-// Projets numériques : catégories (#projets), liste d'une catégorie (#projets/<catégorie>)
-// et fiche d'un projet (#projet/<projet>). cms.js remplace ces données par celles de la base.
+// Projets numériques : catégories (projets/), liste d’une catégorie (projets/<catégorie>/)
+// et fiche d'un projet (projets/<catégorie>/<projet>/). cms.js remplace ces données par celles de la base.
 
 const IMG = 'assets/img/projets/';
 export const CATEGORIES_ORIGINE = [
-  { id: 'sites', titre: 'Sites web', description: 'Design, développement et expériences web.', image: IMG + 'cat-sites.jpg', visible: true, ordre: 1 },
-  { id: 'applications', titre: 'Applications', description: 'Outils numériques et interfaces utiles.', image: IMG + 'cat-applications.jpg', visible: true, ordre: 2 },
-  { id: 'jeux', titre: 'Jeux', description: 'Concepts, univers et prototypes interactifs.', image: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1200&q=80', visible: true, ordre: 3 },
+  { id: 'sites', titre: 'Sites web', description: 'Design, développement et expériences web.', image: IMG + 'cat-sites.webp', visible: true, ordre: 1 },
+  { id: 'applications', titre: 'Applications', description: 'Outils numériques et interfaces utiles.', image: IMG + 'cat-applications.webp', visible: true, ordre: 2 },
+  { id: 'jeux', titre: 'Jeux', description: 'Concepts, univers et prototypes interactifs.', image: 'assets/img/deco/cat-jeux.webp', visible: true, ordre: 3 },
 ];
 
 export const REALISATIONS_ORIGINE = [
@@ -62,7 +62,7 @@ const esc = t => String(t ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': 
 const fmt = t => esc(t).replace(/\*([^*\n]+)\*/g, '<em>$1</em>').replace(/\n/g, '<br>');
 const para = t => String(t || '').split(/\n{2,}/).filter(p => p.trim()).map(p => `<p>${fmt(p)}</p>`).join('');
 const lienSur = u => /^https?:\/\//i.test(u || '') ? u : '';
-const slug = t => String(t || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[’']/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+export const slug = t => String(t || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[’']/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
 let categories = [], realisations = [];
 function preparer(cats, reals) {
@@ -71,12 +71,14 @@ function preparer(cats, reals) {
 }
 preparer(CATEGORIES_ORIGINE, REALISATIONS_ORIGINE);
 
+export function lienProjet(r) { const c = categories.find(x => x.id === r.categorie); return c ? `projets/${c.slug}/${r.slug}/` : 'projets/'; }
+const route = () => (typeof document !== 'undefined' && document.body.dataset.route) || '';
 const deCategorie = c => realisations.filter(r => r.categorie === c.id);
 const pluriel = n => n === 0 ? 'Bientôt' : `${n} projet${n > 1 ? 's' : ''}`;
 const visuel = (src, alt, titre) => src ? `<img src="${esc(src)}" alt="${esc(alt)}" loading="lazy">` : `<div class="tile-type">${esc(titre)}</div>`;
 
 function carteProjet(r) {
-  return `<a class="project-card" href="#projet/${esc(r.slug)}">
+  return `<a class="project-card" href="${esc(lienProjet(r))}">
     <div class="tile">${visuel(r.image, r.titre, r.titre)}</div>
     <div class="card-meta"><span class="card-title">${esc(r.titre)}</span><span class="num">${esc(STATUTS_PROJET[r.statut] || '')}</span></div>
     ${r.accroche ? `<p class="desc">${fmt(r.accroche)}</p>` : ''}
@@ -89,7 +91,7 @@ function rendreCategories() {
   if (!el) return;
   el.innerHTML = categories.map((c, i) => {
     const n = deCategorie(c).length;
-    return `<a class="project-card" href="#projets/${esc(c.slug)}">
+    return `<a class="project-card" href="projets/${esc(c.slug)}/">
       <div class="tile">${visuel(c.image, c.titre, c.titre)}</div>
       <div class="card-meta"><span class="card-title">${esc(c.titre)}</span><span class="num">${String(i + 1).padStart(2, '0')} · ${pluriel(n)}</span></div>
       ${c.description ? `<p class="desc">${fmt(c.description)}</p>` : ''}
@@ -98,31 +100,31 @@ function rendreCategories() {
 }
 
 function rendreCategorie() {
-  const m = location.hash.match(/^#projets\/(.+)$/), el = document.getElementById('page-categorie');
+  const m = route().match(/^projets\/([^/]+)$/), el = document.getElementById('page-categorie');
   if (!m || !el) return;
   const c = categories.find(x => x.slug === decodeURIComponent(m[1]));
-  if (!c) { el.innerHTML = `<section class="wrap page-hero"><a class="back" href="#projets">← Projets numériques</a><h1 class="display">Catégorie<br><em>introuvable.</em></h1></section>`; return; }
+  if (!c) { el.innerHTML = `<section class="wrap page-hero"><a class="back" href="projets/">← Projets numériques</a><h1 class="display">Catégorie<br><em>introuvable.</em></h1></section>`; return; }
   document.title = c.titre + ' — KMAUGER.';
   const liste = deCategorie(c);
   el.innerHTML = `
     <section class="wrap page-hero">
-      <a class="back" href="#projets">← Projets numériques</a>
+      <a class="back" href="projets/">← Projets numériques</a>
       <div class="eyebrow">Projets numériques</div>
       <h1 class="display">${esc(c.titre)}<em>.</em></h1>
       ${c.description ? `<p class="lead">${fmt(c.description)}</p>` : ''}
     </section>
     <section class="wrap content">
       ${liste.length ? `<div class="grid3 projects">${liste.map(carteProjet).join('')}</div>`
-        : `<div class="soon-block"><p class="soon-title">Rien ici pour le moment.</p><p class="soon">Les premiers projets de cette catégorie sont en préparation. Suis leur avancée sur <a href="#contact">mes réseaux</a>.</p></div>`}
-      ${categories.length > 1 ? `<div class="other-cats"><span class="eyebrow">Autres catégories</span>${categories.filter(x => x.id !== c.id).map(x => `<a href="#projets/${esc(x.slug)}">${esc(x.titre)} →</a>`).join('')}</div>` : ''}
+        : `<div class="soon-block"><p class="soon-title">Rien ici pour le moment.</p><p class="soon">Les premiers projets de cette catégorie sont en préparation. Suis leur avancée sur <a href="contact/">mes réseaux</a>.</p></div>`}
+      ${categories.length > 1 ? `<div class="other-cats"><span class="eyebrow">Autres catégories</span>${categories.filter(x => x.id !== c.id).map(x => `<a href="projets/${esc(x.slug)}/">${esc(x.titre)} →</a>`).join('')}</div>` : ''}
     </section>`;
 }
 
 function rendreProjet() {
-  const m = location.hash.match(/^#projet\/(.+)$/), el = document.getElementById('page-projet');
+  const m = route().match(/^projets\/[^/]+\/([^/]+)$/), el = document.getElementById('page-projet');
   if (!m || !el) return;
   const r = realisations.find(x => x.slug === decodeURIComponent(m[1]));
-  if (!r) { el.innerHTML = `<section class="wrap page-hero"><a class="back" href="#projets">← Projets numériques</a><h1 class="display">Projet<br><em>introuvable.</em></h1></section>`; return; }
+  if (!r) { el.innerHTML = `<section class="wrap page-hero"><a class="back" href="projets/">← Projets numériques</a><h1 class="display">Projet<br><em>introuvable.</em></h1></section>`; return; }
   const c = categories.find(x => x.id === r.categorie);
   document.title = r.titre + ' — KMAUGER.';
   const lien = lienSur(r.lien);
@@ -132,7 +134,7 @@ function rendreProjet() {
   const autres = c ? deCategorie(c).filter(x => x.slug !== r.slug) : [];
   el.innerHTML = `
     <section class="wrap project-page">
-      <a class="back" href="${c ? `#projets/${esc(c.slug)}` : '#projets'}">← ${esc(c?.titre || 'Projets numériques')}</a>
+      <a class="back" href="${c ? `projets/${esc(c.slug)}/` : 'projets/'}">← ${esc(c?.titre || 'Projets numériques')}</a>
       <div class="project-head">
         <div>
           <div class="eyebrow">${esc([c?.titre, r.plateforme].filter(Boolean).join(' · '))}</div>
@@ -175,11 +177,9 @@ function ouvrirCapture(liste, i, titre) {
   visionneuse.hidden = false; document.body.classList.add('lb-open'); montrer(i);
   function fermer() { visionneuse.hidden = true; document.body.classList.remove('lb-open'); }
 }
-window.addEventListener('hashchange', () => { if (visionneuse) { visionneuse.hidden = true; document.body.classList.remove('lb-open'); } });
 
 function toutRendre() { rendreCategories(); rendreCategorie(); rendreProjet(); }
 export function definirProjets(cats, reals) { preparer(cats, reals); toutRendre(); window.dispatchEvent(new Event('km:donnees')); }
 export const projetsCourants = () => ({ categories, realisations });
 export { carteProjet, STATUTS_PROJET as STATUTS };
-window.addEventListener('hashchange', () => { rendreCategorie(); rendreProjet(); });
-toutRendre();
+if (typeof document !== 'undefined') toutRendre();

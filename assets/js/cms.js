@@ -1,10 +1,10 @@
 // Contenu géré depuis l'espace de gestion (dépôt kmauger_gestion, base Firebase).
 // Tant que Firebase n'est pas configuré ou que la base est vide, le site garde
 // le contenu écrit dans index.html : ce fichier ne change alors rien.
-import { firebaseConfig, firebaseActif, FIREBASE_SDK } from '../../firebase-config.js?v=202611252026';
-import { definirLivres } from './livres.js?v=202611252026';
-import { definirProjets } from './projets.js?v=202611252026';
-import './enrichi.js?v=202611252026';
+import { firebaseConfig, firebaseActif, FIREBASE_SDK } from '../../firebase-config.js?v=202611252049';
+import { definirLivres } from './livres.js?v=202611252049';
+import { definirProjets } from './projets.js?v=202611252049';
+import './enrichi.js?v=202611252049';
 
 const esc = t => String(t ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 // *mot* → italique, retour à la ligne → <br>
@@ -27,7 +27,7 @@ function appliquerLiens(l) {
   $$('[data-lien]').forEach(a => {
     const cle = a.dataset.lien;
     const v = (l[cle] || '').trim();
-    if (cle === 'email') { a.hidden = !v; if (v) a.href = 'mailto:' + v; return; }
+    if (cle === 'email') { if (v) { a.hidden = false; a.href = 'mailto:' + v; } return; }
     if (lienSur(v)) a.href = v;
   });
 }
@@ -81,8 +81,9 @@ async function demarrer() {
   getDocs(collection(fs, 'images')).then(s => s.forEach(d => { const v = d.data().data; if (v) appliquerImage(d.id, v); }))
     .catch(e => console.warn('Images non chargées', e));
 
+  // Livres : utilisés sur toutes les pages (accueil, fiche, à propos…)
+  visibles('livres').then(definirLivres).catch(e => console.warn('Livres non chargés', e));
   const listes = [
-    ['liste-livres', 'livres', (el, l) => definirLivres(l)],
     ['galerie-photos', 'photos', rendrePhotos],
     ['liste-cosplay', 'cosplays', rendreCosplays],
   ];

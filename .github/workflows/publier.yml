@@ -1,0 +1,44 @@
+# Publie le site sur GitHub Pages : génère une vraie page par adresse (outils/generer.mjs).
+# - à chaque modification du dépôt ;
+# - chaque nuit, pour intégrer les livres et projets ajoutés depuis l'espace de gestion ;
+# - à la demande (onglet Actions → « Publier le site » → Run workflow).
+# L'adresse du site vient des réglages Pages : avec un domaine (kmauger.com) réglé dans
+# Settings → Pages → Custom domain, les liens, le sitemap et les balises suivent tout seuls.
+name: Publier le site
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: '17 3 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  publier:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploiement.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - id: pages
+        uses: actions/configure-pages@v5
+      - name: Générer les pages
+        run: node outils/generer.mjs --sortie _site --url "${{ steps.pages.outputs.base_url }}/"
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - id: deploiement
+        uses: actions/deploy-pages@v4
