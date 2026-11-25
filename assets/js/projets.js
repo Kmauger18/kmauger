@@ -178,6 +178,8 @@ function ouvrirCapture(liste, i, titre) {
 window.addEventListener('hashchange', () => { if (visionneuse) { visionneuse.hidden = true; document.body.classList.remove('lb-open'); } });
 
 function toutRendre() { rendreCategories(); rendreCategorie(); rendreProjet(); }
-export function definirProjets(cats, reals) { preparer(cats, reals); toutRendre(); }
+export function definirProjets(cats, reals) { preparer(cats, reals); toutRendre(); window.dispatchEvent(new Event('km:donnees')); }
+export const projetsCourants = () => ({ categories, realisations });
+export { carteProjet, STATUTS_PROJET as STATUTS };
 window.addEventListener('hashchange', () => { rendreCategorie(); rendreProjet(); });
 toutRendre();

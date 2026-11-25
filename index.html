@@ -13,7 +13,7 @@
 <meta property="og:image" content="https://kmauger18.github.io/kmauger/assets/img/logo.png">
 <link rel="icon" type="image/png" href="assets/img/favicon.png">
 <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
-<link rel="stylesheet" href="assets/css/style.css?v=202611252006">
+<link rel="stylesheet" href="assets/css/style.css?v=202611252017">
 </head>
 <body>
 <header><div class="wrap head">
@@ -32,14 +32,18 @@
 <p class="lead" data-cms="accueil_intro">Je suis Kéliann Mauger. J’explore différentes formes de création, de l’écriture à l’image, du numérique au costume. Voici mon univers.</p>
 <a class="btn" href="#apropos"><span data-cms="accueil_bouton">Découvrir mon univers</span> <span>↗</span></a></div>
 <div class="hero-image"><img data-img="accueil_hero" src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1400&q=85" alt="Espace de création lumineux"><div class="tag" data-cms="accueil_image_tag">KMAUGER. — Creative universe</div></div></section>
-<div class="strip"><div class="wrap"><p data-cms="accueil_citation">« Créer, explorer, raconter. »</p><span data-cms="accueil_citation_sous">Une identité · Plusieurs passions</span></div></div>
+<div class="ticker" aria-hidden="true"><span hidden data-cms="accueil_bandeau">Écriture · Photographie · Sites web · Applications · Jeux · Cosplay · Création</span><div class="ticker-track" id="ticker-track"></div></div><div class="strip"><div class="wrap"><p data-cms="accueil_citation">« Créer, explorer, raconter. »</p><span data-cms="accueil_citation_sous">Une identité · Plusieurs passions</span></div></div>
 <section class="wrap content"><div class="section-head"><div><div class="eyebrow" data-cms="accueil_univers_eyebrow">Explorer</div><h2 class="section-title" data-cms="accueil_univers_titre">Mes univers</h2></div></div><div class="cards">
-<a class="card" href="#livres"><div class="tile"><img data-img="carte_livres" src="assets/img/livres/carte-livres.jpg?v=202611252006" alt="Les romans de Kéliann Mauger"></div><div class="card-meta"><span class="card-title" data-cms="carte_livres">Livres &amp; écriture</span><span class="num">01 / 04</span></div></a>
+<a class="card" href="#livres"><div class="tile"><img data-img="carte_livres" src="assets/img/livres/carte-livres.jpg?v=202611252017" alt="Les romans de Kéliann Mauger"></div><div class="card-meta"><span class="card-title" data-cms="carte_livres">Livres &amp; écriture</span><span class="num">01 / 04</span></div></a>
 <a class="card" href="#photographie"><div class="tile"><img data-img="carte_photo" src="https://images.unsplash.com/photo-1452587925148-ce544e77e70d?auto=format&fit=crop&w=1000&q=80" alt="Photographie"></div><div class="card-meta"><span class="card-title" data-cms="carte_photo">Photographie</span><span class="num">02 / 04</span></div></a>
-<a class="card" href="#projets"><div class="tile"><img data-img="carte_projets" src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1000&q=80" alt="Projets numériques"></div><div class="card-meta"><span class="card-title" data-cms="carte_projets">Projets numériques</span><span class="num">03 / 04</span></div></a>
+<a class="card" href="#projets"><div class="tile"><img data-img="carte_projets" src="assets/img/projets/carte-projets.jpg" alt="Projets numériques"></div><div class="card-meta"><span class="card-title" data-cms="carte_projets">Projets numériques</span><span class="num">03 / 04</span></div></a>
 <a class="card" href="#cosplay"><div class="tile"><img data-img="carte_cosplay" src="https://images.unsplash.com/photo-1531058020387-3be344556be6?auto=format&fit=crop&w=1000&q=80" alt="Cosplay et création"></div><div class="card-meta"><span class="card-title" data-cms="carte_cosplay">Cosplay</span><span class="num">04 / 04</span></div></a>
 </div></section>
+<section class="wrap content" id="home-une-wrap"><div class="eyebrow-line"><div class="eyebrow" data-cms="accueil_une_eyebrow">À la une</div></div><div id="home-une"></div></section>
+<section class="band"><div class="wrap content-tight"><div class="eyebrow" data-cms="accueil_chiffres_eyebrow">En quelques chiffres</div><div class="stats" id="home-stats"></div></div></section>
+<section class="wrap content"><div class="section-head"><div><div class="eyebrow" data-cms="accueil_projets_eyebrow">Côté numérique</div><h2 class="section-title" data-cms="accueil_projets_titre">Derniers projets</h2></div><a class="link" href="#projets">Tous les projets →</a></div><div class="grid3 projects" id="home-projets"></div></section>
 <section class="wrap content"><div class="editorial"><div class="eyebrow" data-cms="accueil_edito_eyebrow">Au-delà du portfolio</div><p data-cms="accueil_edito">Un espace pour présenter ce que je crée, partager ce qui m’inspire et faire découvrir les coulisses de chaque projet. Bienvenue dans mon monde.</p></div></section>
+<section class="wrap content"><div class="cta"><h2 class="display" data-cms="accueil_cta_titre">Une idée, un projet,<br><em>une collaboration ?</em></h2><div><p data-cms="accueil_cta_texte">Parlons-en : chaque nouvelle rencontre est le début d’une nouvelle histoire.</p><a class="btn btn-light" href="#contact"><span data-cms="accueil_cta_bouton">Me contacter</span> <span>↗</span></a></div></div></section>
 </div>
 
 <!-- ===================================================== LIVRES -->
@@ -47,9 +51,10 @@
 <div class="eyebrow" data-cms="livres_eyebrow">01 — Mots &amp; imagination</div>
 <h1 class="display" data-cms="livres_titre">Livres <em>&amp;</em><br>écriture.</h1>
 <p class="lead" data-cms="livres_intro">Des histoires, des personnages et des univers imaginés pour prendre vie au fil des pages.</p>
-<div class="feature"><img data-img="livres_banniere" src="assets/img/livres/banniere-livres.jpg?v=202611252006" alt="Les romans de Kéliann Mauger"></div></section>
+<div class="feature"><img data-img="livres_banniere" src="assets/img/livres/banniere-livres.jpg?v=202611252017" alt="Les romans de Kéliann Mauger"></div></section>
+<section class="wrap content"><div class="editorial"><div class="eyebrow" data-cms="livres_edito_eyebrow">L’écriture</div><p data-cms="livres_edito">Thriller, urban fantasy, romance young adult, comédie romantique : chaque roman explore un genre différent, avec la même envie de créer des personnages qu’on n’oublie pas et des histoires qu’on a envie de raconter.</p></div><div class="stats small" id="livres-stats"></div></section>
 <section class="wrap content"><div class="eyebrow" data-cms="livres_section_eyebrow">Bibliothèque personnelle</div><h2 class="section-title" data-cms="livres_section_titre">Mes ouvrages</h2>
-<div class="books" id="liste-livres"></div></section></div>
+<div class="books" id="liste-livres"></div></section><section class="wrap content"><div class="info-band"><div class="eyebrow" data-cms="livres_ou_eyebrow">Où trouver mes livres</div><p data-cms="livres_ou_texte">Mes romans paraissent au format poche (11 × 17 cm). Chaque fiche indique où se les procurer, et les prochains arrivent au fil des mois.</p></div></section></div>
 
 <!-- ===================================================== FICHE LIVRE -->
 <div class="page" id="livre"><div id="fiche-livre"></div></div>
@@ -60,22 +65,27 @@
 <h1 class="display" data-cms="photo_titre">Photographie<em>.</em></h1>
 <p class="lead" data-cms="photo_intro">Capturer une ambiance, raconter un instant et porter un regard singulier sur ce qui nous entoure.</p>
 <div class="feature"><img data-img="photo_banniere" src="https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=1800&q=85" alt="Paysage photographié"></div></section>
+<section class="wrap content"><div class="editorial"><div class="eyebrow" data-cms="photo_edito_eyebrow">Mon regard</div><div><p data-cms="photo_edito">Paysages, lumières, détails du quotidien : je photographie ce qui m’arrête, en cherchant la bonne lumière et le bon angle. Une galerie qui s’enrichit au fil de mes sorties.</p><div class="themes-wrap"><div class="eyebrow" data-cms="photo_themes_eyebrow">Thèmes</div><div class="chips" id="photo-themes"></div></div></div></div></section>
 <section class="wrap content"><div class="eyebrow" data-cms="photo_section_eyebrow">Sélection visuelle</div><h2 class="section-title" data-cms="photo_section_titre">Galerie photographique</h2>
 <div class="filters" id="filtres-photos" hidden></div>
 <div class="grid3 gallery" id="galerie-photos" style="margin-top:35px">
 <figure class="shot" data-c="paysages"><div class="tile"><img src="https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=900&q=80" alt="Paysage"></div><figcaption class="card-meta"><span class="card-title">Paysages</span></figcaption></figure>
 <figure class="shot" data-c="lumieres"><div class="tile"><img src="https://images.unsplash.com/photo-1490730141103-6cac27aaab94?auto=format&fit=crop&w=900&q=80" alt="Lumières"></div><figcaption class="card-meta"><span class="card-title">Lumières</span></figcaption></figure>
 <figure class="shot" data-c="atmospheres"><div class="tile"><img src="https://images.unsplash.com/photo-1519608487953-e999c86e7455?auto=format&fit=crop&w=900&q=80" alt="Atmosphères"></div><figcaption class="card-meta"><span class="card-title">Atmosphères</span></figcaption></figure>
-</div></section></div>
+</div></section><section class="wrap insta-band"><p data-cms="photo_insta_texte">Retrouve mes dernières photos sur Instagram.</p><a class="btn" data-lien="instagram_perso" href="https://www.instagram.com/kmauger18/" target="_blank" rel="noopener">Suivre sur Instagram <span>↗</span></a></section></div>
 
 <!-- ===================================================== PROJETS -->
 <div class="page" id="projets"><section class="wrap page-hero">
 <div class="eyebrow" data-cms="projets_eyebrow">03 — Idées &amp; expérimentations</div>
 <h1 class="display" data-cms="projets_titre">Projets<br><em>numériques.</em></h1>
 <p class="lead" data-cms="projets_intro">Sites web, applications et jeux : des idées transformées en expériences concrètes.</p>
-<div class="feature"><img data-img="projets_banniere" src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1800&q=85" alt="Interface numérique"></div></section>
+<div class="feature"><img data-img="projets_banniere" src="assets/img/projets/banniere-projets.jpg" alt="Projets numériques de Kéliann Mauger"></div></section>
+<section class="band"><div class="wrap content-tight"><div class="stats" id="projets-stats"></div></div></section>
 <section class="wrap content"><div class="eyebrow" data-cms="projets_section_eyebrow">Portfolio</div><h2 class="section-title" data-cms="projets_section_titre">Projets sélectionnés</h2>
-<div class="grid3 projects" id="liste-projets" style="margin-top:35px"></div></section></div>
+<div class="grid3 projects" id="liste-projets" style="margin-top:35px"></div></section>
+<section class="wrap content" id="projets-une-wrap"><div class="eyebrow-line"><div class="eyebrow" data-cms="projets_une_eyebrow">Projet à la une</div></div><div id="projets-une"></div></section>
+<section class="wrap content"><div class="section-head"><div><div class="eyebrow" data-cms="projets_methode_eyebrow">Méthode</div><h2 class="section-title" data-cms="projets_methode_titre">De l’idée<br><em>à la mise en ligne.</em></h2></div></div><div class="steps"><div class="step"><span class="step-num">01</span><h3 data-cms="projets_etape1_titre">Comprendre</h3><p data-cms="projets_etape1_texte">Écouter le besoin, observer l’usage et définir ce qui compte vraiment.</p></div><div class="step"><span class="step-num">02</span><h3 data-cms="projets_etape2_titre">Dessiner</h3><p data-cms="projets_etape2_texte">Maquettes, identité visuelle, parcours : l’interface prend forme avant la première ligne de code.</p></div><div class="step"><span class="step-num">03</span><h3 data-cms="projets_etape3_titre">Développer</h3><p data-cms="projets_etape3_texte">Un code propre et léger, testé sur téléphone comme sur ordinateur.</p></div><div class="step"><span class="step-num">04</span><h3 data-cms="projets_etape4_titre">Faire vivre</h3><p data-cms="projets_etape4_texte">Mise en ligne, espace de gestion, mises à jour : le projet continue d’évoluer.</p></div></div></section>
+<section class="wrap content"><div class="editorial"><div class="eyebrow" data-cms="projets_techs_eyebrow">Outils &amp; technologies</div><div class="chips big" id="projets-techs"></div></div></section></div>
 
 <!-- ===================================================== CATÉGORIE ET FICHE PROJET -->
 <div class="page" id="categorie"><div id="page-categorie"></div></div>
@@ -88,9 +98,10 @@
 <p class="lead" data-cms="cosplay_intro">Donner corps à des personnages, fabriquer des détails et faire passer l’imaginaire dans le réel.</p>
 <div class="feature"><img data-img="cosplay_banniere" src="https://images.unsplash.com/photo-1531058020387-3be344556be6?auto=format&fit=crop&w=1800&q=85" alt="Événement créatif"></div></section>
 <section class="wrap content"><div class="editorial"><div class="eyebrow" data-cms="cosplay_edito_eyebrow">De l’idée au costume</div><p data-cms="cosplay_edito">Chaque personnage commence par l’observation, puis se construit pièce par pièce : costume, accessoires, détails de fabrication et photos finales.</p></div>
+<div class="section-head" style="margin-top:80px"><div><div class="eyebrow" data-cms="cosplay_process_eyebrow">Le processus</div><h2 class="section-title" data-cms="cosplay_process_titre">Du personnage<br><em>au shooting.</em></h2></div></div><div class="steps"><div class="step"><span class="step-num">01</span><h3 data-cms="cosplay_etape1_titre">Choisir</h3><p data-cms="cosplay_etape1_texte">Un personnage qui me parle, puis des dizaines de références sous tous les angles.</p></div><div class="step"><span class="step-num">02</span><h3 data-cms="cosplay_etape2_titre">Concevoir</h3><p data-cms="cosplay_etape2_texte">Patrons, matériaux, budget : chaque pièce est pensée avant d’être fabriquée.</p></div><div class="step"><span class="step-num">03</span><h3 data-cms="cosplay_etape3_titre">Fabriquer</h3><p data-cms="cosplay_etape3_texte">Couture, armures, accessoires, peinture : les détails font toute la différence.</p></div><div class="step"><span class="step-num">04</span><h3 data-cms="cosplay_etape4_titre">Incarner</h3><p data-cms="cosplay_etape4_texte">Conventions, événements et séances photo pour donner vie au personnage.</p></div></div>
 <h2 class="section-title" style="margin-top:70px" data-cms="cosplay_section_titre">Mes cosplays</h2>
 <div class="grid3" id="liste-cosplay" style="margin-top:35px"><p class="soon">Les premières réalisations arrivent bientôt.</p></div>
-</section></div>
+</section><section class="wrap insta-band"><p data-cms="cosplay_insta_texte">Les coulisses de fabrication sont à suivre sur Instagram.</p><a class="btn" data-lien="instagram_perso" href="https://www.instagram.com/kmauger18/" target="_blank" rel="noopener">Suivre sur Instagram <span>↗</span></a></section></div>
 
 <!-- ===================================================== À PROPOS -->
 <div class="page" id="apropos"><section class="wrap page-hero">
@@ -102,21 +113,30 @@
 <h2 class="section-title" data-cms="apropos_bloc_titre">Plusieurs passions.<br>Une même envie de créer.</h2>
 <p data-cms="apropos_p1">Je suis Kéliann Mauger. J’ai créé cet espace pour réunir les différents univers qui me passionnent : l’écriture, la photographie, la création numérique et le cosplay.</p>
 <p data-cms="apropos_p2">KMAUGER. est à la fois un portfolio et un lieu de partage. J’y présente mes réalisations, mes expérimentations et les projets qui évoluent au fil du temps.</p>
-</div></div></section></div>
+</div></div></section>
+<section class="band"><div class="wrap content-tight"><div class="eyebrow" data-cms="apropos_chiffres_eyebrow">En quelques chiffres</div><div class="stats" id="apropos-stats"></div></div></section>
+<section class="wrap content"><div class="section-head"><div><div class="eyebrow" data-cms="apropos_valeurs_eyebrow">Ce qui m’anime</div></div></div><div class="steps three"><div class="step"><span class="step-num">01</span><h3 data-cms="apropos_v1_titre">Curiosité</h3><p data-cms="apropos_v1_texte">Apprendre en faisant : chaque nouveau projet est l’occasion d’explorer un outil, une technique ou un genre.</p></div><div class="step"><span class="step-num">02</span><h3 data-cms="apropos_v2_titre">Exigence</h3><p data-cms="apropos_v2_texte">Soigner les détails, du choix d’un mot à l’alignement d’un pixel.</p></div><div class="step"><span class="step-num">03</span><h3 data-cms="apropos_v3_titre">Partage</h3><p data-cms="apropos_v3_texte">Montrer les coulisses autant que le résultat, pour inspirer et échanger.</p></div></div></section>
+<section class="wrap content"><div class="eyebrow" data-cms="apropos_univers_eyebrow">Mes univers</div><div class="univers-list" id="apropos-univers"></div></section></div>
 
 <!-- ===================================================== CONTACT -->
 <div class="page" id="contact"><section class="wrap page-hero">
 <div class="eyebrow" data-cms="contact_eyebrow">Entrer en contact</div>
 <h1 class="display" data-cms="contact_titre">Une idée ?<br><em>Parlons-en.</em></h1>
 <p class="lead" data-cms="contact_intro">Une question, une proposition, une collaboration ou simplement l’envie d’échanger autour d’un projet ? Retrouve-moi sur mes réseaux.</p></section>
+<section class="wrap content"><div class="section-head"><div><div class="eyebrow" data-cms="contact_raisons_eyebrow">Pourquoi m’écrire</div></div></div><div class="steps"><div class="step"><span class="step-num">01</span><h3 data-cms="contact_r1_titre">Un livre</h3><p data-cms="contact_r1_texte">Une question sur un roman, une dédicace, un salon ou une chronique.</p></div><div class="step"><span class="step-num">02</span><h3 data-cms="contact_r2_titre">Un projet numérique</h3><p data-cms="contact_r2_texte">Un site, une application, un outil : parlons de ton idée.</p></div><div class="step"><span class="step-num">03</span><h3 data-cms="contact_r3_titre">Photo &amp; cosplay</h3><p data-cms="contact_r3_texte">Une séance photo, un événement ou une collaboration créative.</p></div><div class="step"><span class="step-num">04</span><h3 data-cms="contact_r4_titre">Simplement échanger</h3><p data-cms="contact_r4_texte">Un avis, une suggestion, ou juste l’envie de dire bonjour.</p></div></div></section>
 <section class="wrap content"><div class="contact"><div><div class="eyebrow" style="color:#aaa" data-cms="contact_bloc_eyebrow">Restons connectés</div><h2 class="display" data-cms="contact_bloc_titre">Let’s create<br>something.</h2></div>
 <div class="contact-links"><a class="btn" data-lien="instagram_perso" href="https://www.instagram.com/kmauger18/" target="_blank" rel="noopener">Instagram personnel ↗</a><a class="btn" data-lien="instagram_projets" href="https://www.instagram.com/kmauger.studio/" target="_blank" rel="noopener">Instagram projets ↗</a><a class="btn" data-lien="email" href="#" hidden>E-mail ↗</a></div></div></section></div>
 </main>
 
-<footer><div class="wrap foot"><b>KMAUGER.</b><div class="social"><a data-lien="instagram_perso" href="https://www.instagram.com/kmauger18/" target="_blank" rel="noopener">Instagram</a><a data-lien="instagram_projets" href="https://www.instagram.com/kmauger.studio/" target="_blank" rel="noopener">Studio</a></div><small>© <span id="year"></span> Kéliann Mauger · Tous droits réservés</small></div></footer>
+<footer><div class="wrap foot-grid">
+<div class="foot-brand"><b>KMAUGER.</b><p data-cms="pied_texte">L’univers créatif de Kéliann Mauger : livres, photographie, projets numériques et cosplay.</p></div>
+<div class="foot-col" aria-label="Pages"><span class="eyebrow">Explorer</span><a href="#livres">Livres</a><a href="#photographie">Photographie</a><a href="#projets">Projets numériques</a><a href="#cosplay">Cosplay</a></div>
+<div class="foot-col" aria-label="Infos"><span class="eyebrow">KMAUGER.</span><a href="#apropos">À propos</a><a href="#contact">Contact</a><a href="#accueil" class="to-top">Retour en haut ↑</a></div>
+<div class="foot-col"><span class="eyebrow">Réseaux</span><a data-lien="instagram_perso" href="https://www.instagram.com/kmauger18/" target="_blank" rel="noopener">Instagram ↗</a><a data-lien="instagram_projets" href="https://www.instagram.com/kmauger.studio/" target="_blank" rel="noopener">Instagram projets ↗</a></div>
+</div><div class="wrap foot"><small>© <span id="year"></span> Kéliann Mauger · Tous droits réservés</small><small>Fait main, en Normandie</small></div></footer>
 
 <div class="lightbox" id="lightbox" hidden><button type="button" class="lb-close" aria-label="Fermer">✕</button><button type="button" class="lb-prev" aria-label="Photo précédente">‹</button><figure><img alt=""><figcaption></figcaption></figure><button type="button" class="lb-next" aria-label="Photo suivante">›</button></div>
 
-<script src="assets/js/main.js?v=202611252006" defer></script>
-<script type="module" src="assets/js/cms.js?v=202611252006"></script>
+<script src="assets/js/main.js?v=202611252017" defer></script>
+<script type="module" src="assets/js/cms.js?v=202611252017"></script>
 </body></html>

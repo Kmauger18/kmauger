@@ -52,7 +52,9 @@ function initGalerie(categories = null) {
     if (!presentes.has(filtre)) filtre = 'tout';
   }
   appliquerFiltre();
+  window.dispatchEvent(new Event('km:donnees'));
 }
+function filtrer(cat) { filtre = cat; appliquerFiltre(); galerie.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
 filtres.addEventListener('click', e => {
   const b = e.target.closest('button[data-f]');
   if (b) { filtre = b.dataset.f; appliquerFiltre(); }
@@ -91,5 +93,5 @@ document.addEventListener('keydown', e => {
   if (e.key === 'ArrowRight') ouvrir(courant + 1);
 });
 
-window.KM = { initGalerie };
+window.KM = { initGalerie, filtrer };
 initGalerie();

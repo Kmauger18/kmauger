@@ -122,7 +122,9 @@ export function definirLivres(liste) {
   livres = liste.map(l => ({ ...l, id: slug(l.titre) || l.id }));
   rendreListe();
   rendreFiche();
+  window.dispatchEvent(new Event('km:donnees'));
 }
+export const livresCourants = () => livres;
 
 window.addEventListener('hashchange', rendreFiche);
 rendreListe();

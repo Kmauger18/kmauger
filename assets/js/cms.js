@@ -1,9 +1,10 @@
 // Contenu géré depuis l'espace de gestion (dépôt kmauger_gestion, base Firebase).
 // Tant que Firebase n'est pas configuré ou que la base est vide, le site garde
 // le contenu écrit dans index.html : ce fichier ne change alors rien.
-import { firebaseConfig, firebaseActif, FIREBASE_SDK } from '../../firebase-config.js?v=202611252006';
-import { definirLivres } from './livres.js?v=202611252006';
-import { definirProjets } from './projets.js?v=202611252006';
+import { firebaseConfig, firebaseActif, FIREBASE_SDK } from '../../firebase-config.js?v=202611252017';
+import { definirLivres } from './livres.js?v=202611252017';
+import { definirProjets } from './projets.js?v=202611252017';
+import './enrichi.js?v=202611252017';
 
 const esc = t => String(t ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 // *mot* → italique, retour à la ligne → <br>
@@ -52,6 +53,7 @@ function rendreCosplays(el, cosplays) {
       ${c.univers ? `<p class="book-meta">${esc(c.univers)}</p>` : ''}
       ${c.description ? `<p class="desc">${fmt(c.description)}</p>` : ''}
     </article>`).join('') : '<p class="soon">Les premières réalisations arrivent bientôt.</p>';
+  window.dispatchEvent(new Event('km:donnees'));
 }
 
 // ---------------------------------------------------------------- Lancement
@@ -72,6 +74,7 @@ async function demarrer() {
   // Base pas encore remplie depuis l'espace de gestion : on garde le contenu de la page
   if (!textes.exists()) return;
   appliquerTextes(textes.data());
+  window.dispatchEvent(new Event('km:donnees'));
   if (liens.exists()) appliquerLiens(liens.data());
 
   getDocs(collection(fs, 'images')).then(s => s.forEach(d => { const v = d.data().data; if (v) appliquerImage(d.id, v); }))
