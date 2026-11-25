@@ -7,11 +7,13 @@ const menu = document.getElementById('menu');
 function showPage() {
   let id = location.hash.slice(1) || 'accueil';
   if (id.startsWith('livre/')) id = 'livre';
+  else if (id.startsWith('projets/')) id = 'categorie';
+  else if (id.startsWith('projet/')) id = 'projet';
   if (!document.getElementById(id)?.classList.contains('page')) id = 'accueil';
   pages.forEach(p => p.classList.toggle('active', p.id === id));
-  const rubrique = id === 'livre' ? 'livres' : id;
+  const rubrique = { livre: 'livres', categorie: 'projets', projet: 'projets' }[id] || id;
   links.forEach(a => a.classList.toggle('active', a.hash === '#' + rubrique));
-  if (id === 'livre') { nav.classList.remove('open'); menu.setAttribute('aria-expanded', 'false'); window.scrollTo({ top: 0, behavior: 'instant' }); return; }
+  if (['livre', 'categorie', 'projet'].includes(id)) { nav.classList.remove('open'); menu.setAttribute('aria-expanded', 'false'); window.scrollTo({ top: 0, behavior: 'instant' }); return; }
   nav.classList.remove('open');
   menu.setAttribute('aria-expanded', 'false');
   window.scrollTo({ top: 0, behavior: 'instant' });

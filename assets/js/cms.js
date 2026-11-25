@@ -1,8 +1,9 @@
 // Contenu géré depuis l'espace de gestion (dépôt kmauger_gestion, base Firebase).
 // Tant que Firebase n'est pas configuré ou que la base est vide, le site garde
 // le contenu écrit dans index.html : ce fichier ne change alors rien.
-import { firebaseConfig, firebaseActif, FIREBASE_SDK } from '../../firebase-config.js?v=202611251929';
-import { definirLivres } from './livres.js?v=202611251929';
+import { firebaseConfig, firebaseActif, FIREBASE_SDK } from '../../firebase-config.js?v=202611252005';
+import { definirLivres } from './livres.js?v=202611252005';
+import { definirProjets } from './projets.js?v=202611252005';
 
 const esc = t => String(t ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 // *mot* → italique, retour à la ligne → <br>
@@ -12,7 +13,6 @@ const $$ = s => [...document.querySelectorAll(s)];
 const lienSur = u => /^(https?:\/\/|mailto:)/i.test(u || '') ? u : '';
 
 export const CATEGORIES_PHOTO = { paysages: 'Paysages', lumieres: 'Lumières', atmospheres: 'Atmosphères', portraits: 'Portraits', macro: 'Macro', urbain: 'Urbain', autres: 'Autres' };
-const TYPES_PROJET = { site: 'Site web', application: 'Application', jeu: 'Jeu', autre: 'Projet' };
 
 // ---------------------------------------------------------------- Textes, liens, images
 function appliquerTextes(t) {
@@ -43,18 +43,6 @@ function rendrePhotos(el, photos) {
     <figcaption class="card-meta"><span class="card-title">${esc(p.legende || '')}</span><span class="num">${esc(CATEGORIES_PHOTO[p.categorie] || '')}</span></figcaption></figure>`).join('')
     : '<p class="soon">Les photos arrivent bientôt.</p>';
   window.KM?.initGalerie(CATEGORIES_PHOTO);
-}
-function rendreProjets(el, projets) {
-  el.innerHTML = projets.length ? projets.map(p => {
-    const lien = lienSur(p.lien);
-    return `<article class="project">
-      <div class="tile">${p.image ? `<img src="${esc(p.image)}" alt="${esc(p.titre)}" loading="lazy">` : `<div class="tile-type">${esc(p.titre)}</div>`}</div>
-      <div class="card-meta"><span class="card-title">${esc(p.titre)}</span><span class="num">${esc(TYPES_PROJET[p.type] || '')}</span></div>
-      ${p.description ? `<p class="desc">${fmt(p.description)}</p>` : ''}
-      ${p.technologies ? `<p class="tags">${p.technologies.split(',').map(t => t.trim()).filter(Boolean).map(t => `<span>${esc(t)}</span>`).join('')}</p>` : ''}
-      ${lien ? `<a class="link" href="${esc(lien)}" target="_blank" rel="noopener">${esc(p.libelleLien || 'Voir le projet')} ↗</a>` : ''}
-    </article>`;
-  }).join('') : '<p class="soon">Les projets arrivent bientôt.</p>';
 }
 function rendreCosplays(el, cosplays) {
   el.innerHTML = cosplays.length ? cosplays.map(c => `
@@ -92,9 +80,13 @@ async function demarrer() {
   const listes = [
     ['liste-livres', 'livres', (el, l) => definirLivres(l)],
     ['galerie-photos', 'photos', rendrePhotos],
-    ['liste-projets', 'projets', rendreProjets],
     ['liste-cosplay', 'cosplays', rendreCosplays],
   ];
+  // Projets : catégories (collection « projets ») et projets (collection « realisations »)
+  Promise.all([visibles('projets'), visibles('realisations')])
+    .then(([cats, reals]) => { if (cats.length || reals.length) definirProjets(cats, reals); })
+    .catch(e => console.warn('Projets non chargés', e));
+
   await Promise.all(listes.map(async ([idEl, col, rendre]) => {
     const el = document.getElementById(idEl);
     if (!el) return;
