@@ -17,7 +17,7 @@ function showPage() {
   nav.classList.remove('open');
   menu.setAttribute('aria-expanded', 'false');
   window.scrollTo({ top: 0, behavior: 'instant' });
-  document.title = id === 'accueil' ? 'KMAUGER. — A universe of creativity' : links.find(a => a.hash === '#' + id)?.textContent + ' — KMAUGER.';
+  document.title = id === 'accueil' ? 'KMAUGER. — Kéliann Mauger : livres, photographie, projets numériques et cosplay' : (links.find(a => a.hash === '#' + id)?.textContent || document.querySelector('#' + id + ' h1')?.innerText.replace(/\s+/g, ' ').trim() || 'KMAUGER.') + ' — KMAUGER.';
 }
 window.addEventListener('hashchange', showPage);
 menu.addEventListener('click', () => {
@@ -69,18 +69,25 @@ async function ouvrir(i) {
   cible.src = img.src;
   cible.alt = img.alt;
   lb.querySelector('figcaption').textContent = fig.querySelector('figcaption')?.textContent.trim() || '';
+  const dejaOuvert = !lb.hidden;
   lb.hidden = false;
   document.body.classList.add('lb-open');
+  if (!dejaOuvert) lb.querySelector('.lb-close').focus();
   // Grande version chargée depuis la base si elle existe
   if (img.dataset.hd && window.KM_hd) {
     const attendu = courant;
     try { const hd = await window.KM_hd(img.dataset.hd); if (hd && attendu === courant) cible.src = hd; } catch (e) {}
   }
 }
-function fermer() { lb.hidden = true; document.body.classList.remove('lb-open'); }
+function fermer() { lb.hidden = true; document.body.classList.remove('lb-open'); dernierFocus?.focus(); }
+let dernierFocus = null;
 galerie.addEventListener('click', e => {
   const fig = e.target.closest('.shot');
-  if (fig) ouvrir(visibles().indexOf(fig));
+  if (fig) { dernierFocus = fig; ouvrir(visibles().indexOf(fig)); }
+});
+galerie.addEventListener('keydown', e => {
+  const fig = e.target.closest('.shot');
+  if (fig && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); dernierFocus = fig; ouvrir(visibles().indexOf(fig)); }
 });
 lb.querySelector('.lb-close').onclick = fermer;
 lb.querySelector('.lb-prev').onclick = () => ouvrir(courant - 1);
@@ -91,6 +98,7 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Escape') fermer();
   if (e.key === 'ArrowLeft') ouvrir(courant - 1);
   if (e.key === 'ArrowRight') ouvrir(courant + 1);
+  if (e.key === 'Tab') { const f = [...lb.querySelectorAll('button')]; const i = f.indexOf(document.activeElement); e.preventDefault(); f[(i + (e.shiftKey ? -1 : 1) + f.length) % f.length].focus(); }
 });
 
 window.KM = { initGalerie, filtrer };

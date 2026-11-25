@@ -1,10 +1,10 @@
 // Contenu géré depuis l'espace de gestion (dépôt kmauger_gestion, base Firebase).
 // Tant que Firebase n'est pas configuré ou que la base est vide, le site garde
 // le contenu écrit dans index.html : ce fichier ne change alors rien.
-import { firebaseConfig, firebaseActif, FIREBASE_SDK } from '../../firebase-config.js?v=202611252017';
-import { definirLivres } from './livres.js?v=202611252017';
-import { definirProjets } from './projets.js?v=202611252017';
-import './enrichi.js?v=202611252017';
+import { firebaseConfig, firebaseActif, FIREBASE_SDK } from '../../firebase-config.js?v=202611252026';
+import { definirLivres } from './livres.js?v=202611252026';
+import { definirProjets } from './projets.js?v=202611252026';
+import './enrichi.js?v=202611252026';
 
 const esc = t => String(t ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 // *mot* → italique, retour à la ligne → <br>
@@ -23,6 +23,7 @@ function appliquerTextes(t) {
   });
 }
 function appliquerLiens(l) {
+  const em = document.querySelector('[data-legal-email]'); if (em && (l.email || '').trim()) em.innerHTML = ' ou par e-mail : <a href="mailto:' + esc(l.email.trim()) + '">' + esc(l.email.trim()) + '</a>';
   $$('[data-lien]').forEach(a => {
     const cle = a.dataset.lien;
     const v = (l[cle] || '').trim();
@@ -40,7 +41,7 @@ function appliquerImage(cle, src) {
 // ---------------------------------------------------------------- Listes
 function rendrePhotos(el, photos) {
   el.innerHTML = photos.length ? photos.map(p => `
-    <figure class="shot" data-c="${esc(p.categorie)}"><div class="tile"><img src="${esc(p.apercu)}" alt="${esc(p.legende || CATEGORIES_PHOTO[p.categorie] || '')}" loading="lazy"${p.hd ? ` data-hd="${esc(p.id)}"` : ''}></div>
+    <figure class="shot" tabindex="0" aria-label="Agrandir : ${esc(p.legende || CATEGORIES_PHOTO[p.categorie] || "photo")}" data-c="${esc(p.categorie)}"><div class="tile"><img src="${esc(p.apercu)}" alt="${esc(p.legende || CATEGORIES_PHOTO[p.categorie] || '')}" loading="lazy"${p.hd ? ` data-hd="${esc(p.id)}"` : ''}></div>
     <figcaption class="card-meta"><span class="card-title">${esc(p.legende || '')}</span><span class="num">${esc(CATEGORIES_PHOTO[p.categorie] || '')}</span></figcaption></figure>`).join('')
     : '<p class="soon">Les photos arrivent bientôt.</p>';
   window.KM?.initGalerie(CATEGORIES_PHOTO);
