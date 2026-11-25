@@ -1,9 +1,9 @@
 // Contenu géré depuis l'espace de gestion (dépôt kmauger_gestion, base Firebase).
 // Tant que Firebase n'est pas configuré ou que la base est vide, le site garde
 // le contenu écrit dans index.html : ce fichier ne change alors rien.
-import { firebaseConfig, firebaseActif, FIREBASE_SDK } from '../../firebase-config.js?v=202611252005';
-import { definirLivres } from './livres.js?v=202611252005';
-import { definirProjets } from './projets.js?v=202611252005';
+import { firebaseConfig, firebaseActif, FIREBASE_SDK } from '../../firebase-config.js?v=202611252006';
+import { definirLivres } from './livres.js?v=202611252006';
+import { definirProjets } from './projets.js?v=202611252006';
 
 const esc = t => String(t ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 // *mot* → italique, retour à la ligne → <br>
@@ -84,7 +84,7 @@ async function demarrer() {
   ];
   // Projets : catégories (collection « projets ») et projets (collection « realisations »)
   Promise.all([visibles('projets'), visibles('realisations')])
-    .then(([cats, reals]) => { if (cats.length || reals.length) definirProjets(cats, reals); })
+    .then(([cats, reals]) => { if (cats.length && reals.length) definirProjets(cats, reals); })
     .catch(e => console.warn('Projets non chargés', e));
 
   await Promise.all(listes.map(async ([idEl, col, rendre]) => {
