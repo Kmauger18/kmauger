@@ -37,6 +37,8 @@ const libres = () => photos.filter(p => !p.album || !albums.some(a => a.id === p
 const route = () => (typeof document !== 'undefined' && document.body.dataset.route) || '';
 const sansAlbum = () => libres().length;
 const couvertureDe = a => a.couverture || photosDe(a.id)[0]?.apercu || '';
+// Version légère d'une image du site (NN.webp → NN-m.webp)
+const miniature = c => /\/assets\/img\/photos\/.+\/\d+\.webp$|^assets\/img\/photos\/.+\/\d+\.webp$/.test(c) ? c.replace(/(\d+)\.webp$/, '$1-m.webp') : c;
 const orientation = p => (p.ratio || 1) >= 1.2 ? 'paysage' : (p.ratio || 1) <= 0.85 ? 'portrait' : 'carre';
 
 function figure(p, i, total, legendeCat = true) {
@@ -60,9 +62,10 @@ function rendreListeAlbums() {
   if (bloc) bloc.hidden = !albums.length;
   el.innerHTML = albums.map((a, i) => {
     const n = photosDe(a.id).length;
-    return `<a class="album-carte${i === 0 ? ' grande' : ''}" href="photographie/${esc(a.slug)}/">
-      <div class="album-img">${couvertureDe(a) ? `<img src="${esc(couvertureDe(a))}" alt="" loading="${i ? 'lazy' : 'eager'}" decoding="async">` : ''}<span class="album-nb">${n} photo${n > 1 ? 's' : ''}</span></div>
-      <div class="album-texte"><span class="num">Album ${String(i + 1).padStart(2, '0')}${a.date ? ' · ' + esc(a.date) : ''}</span><h3>${esc(a.titre)}</h3>${a.sousTitre ? `<p>${fmt(a.sousTitre)}</p>` : ''}<span class="lien-fleche">Ouvrir l’album →</span></div></a>`;
+    return `<a class="album-carte" href="photographie/${esc(a.slug)}/">
+      <div class="album-img">${couvertureDe(a) ? `<img src="${esc(miniature(couvertureDe(a)))}" alt="" loading="${i > 2 ? 'lazy' : 'eager'}" decoding="async">` : ''}
+        <div class="album-voile"><span class="num">${n} photo${n > 1 ? 's' : ''}${a.date ? ' · ' + esc(a.date) : ''}</span><h3>${esc(a.titre)}</h3>${a.sousTitre ? `<p>${fmt(a.sousTitre)}</p>` : ''}</div></div>
+      <span class="album-ouvrir">Ouvrir l’album <i>→</i></span></a>`;
   }).join('');
 }
 function rendreGalerieLibre() {
@@ -94,15 +97,27 @@ function rendreAlbum() {
   const lienModele = /^https?:\/\//i.test(a.lienModele || '') ? a.lienModele : '';
   const reseau = u => /instagram/i.test(u) ? 'Instagram' : /tiktok/i.test(u) ? 'TikTok' : /facebook/i.test(u) ? 'Facebook' : /youtube/i.test(u) ? 'YouTube' : /(x|twitter)\.com/i.test(u) ? 'X' : 'Site';
   const infos = [['Photographie', 'Kéliann Mauger'], ['Modèle', a.modele], ['Date', a.date], ['Lieu', a.lieu], ['Photos', String(l.length)]].filter(([, v]) => v);
+  const autres = l.filter(p => (p.hdUrl || p.apercu) !== cov && p.apercu !== cov).slice(0, 2);
+  const hd = p => p.hdUrl || p.apercu;
+  const puces = [`${l.length} photo${l.length > 1 ? 's' : ''}`, a.date, a.modele && `Modèle · ${a.modele}`].filter(Boolean);
   el.innerHTML = `
     <section class="album-hero">
-      ${cov ? `<img src="${esc(cov)}" alt="" fetchpriority="high">` : ''}
-      <div class="album-hero-texte wrap">
-        <a class="back" href="photographie/">← Photographie</a>
-        <div class="eyebrow">Album photo${a.date ? ' · ' + esc(a.date) : ''}</div>
-        <h1 class="album-titre">${esc(a.titre)}</h1>
-        ${a.sousTitre ? `<p class="album-sous-titre">${fmt(a.sousTitre)}</p>` : ''}
-        <a class="album-defiler" href="${location.pathname}#portfolio" data-defiler>Voir les ${l.length} photos ↓</a>
+      ${cov ? `<div class="album-hero-fond" style="background-image:url('${esc(cov)}')" aria-hidden="true"></div>` : ''}
+      <span class="album-hero-filigrane" aria-hidden="true">${esc(a.titre)}</span>
+      <div class="wrap album-hero-grille">
+        <div class="album-hero-texte">
+          <a class="back" href="photographie/">← Photographie</a>
+          <div class="eyebrow">Album ${String(i + 1).padStart(2, '0')} · Portfolio</div>
+          <h1 class="album-titre">${esc(a.titre)}<em>.</em></h1>
+          ${a.sousTitre ? `<p class="album-sous-titre">${fmt(a.sousTitre)}</p>` : ''}
+          <ul class="album-puces">${puces.map(x => `<li>${esc(x)}</li>`).join('')}</ul>
+          <a class="btn album-defiler" href="${location.pathname}#portfolio" data-defiler>Voir la série <span>↓</span></a>
+        </div>
+        <div class="album-hero-collage">
+          ${cov ? `<figure class="col-principale"><img src="${esc(cov)}" alt="${esc(a.titre)} — photo de couverture" fetchpriority="high" decoding="async"></figure>` : ''}
+          ${autres.map((p, k) => `<figure class="col-${k ? 'b' : 'a'}"><img src="${esc(hd(p))}" alt="${esc(p.legende || '')}" decoding="async"><figcaption>${esc(p.legende || '')}</figcaption></figure>`).join('')}
+          <span class="album-hero-compteur">01 — ${String(l.length).padStart(2, '0')}</span>
+        </div>
       </div>
     </section>
     <section class="wrap album-intro">
@@ -120,6 +135,11 @@ function rendreAlbum() {
       <p>Une envie de séance photo, un projet, une collaboration ? <a href="contact/">Parlons-en.</a></p></div>
     ${suivant ? `<a class="album-suivant" href="photographie/${esc(suivant.slug)}/">${couvertureDe(suivant) ? `<img src="${esc(couvertureDe(suivant))}" alt="" loading="lazy">` : ''}<span><small>Album suivant</small><b>${esc(suivant.titre)}</b></span></a>`
       : `<a class="btn" href="photographie/">Tous les albums <span>↗</span></a>`}`;
+  const collage = el.querySelector('.album-hero-collage');
+  if (collage && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const bouger = () => { const y = Math.min(window.scrollY, 900); collage.style.setProperty('--py', y); };
+    window.addEventListener('scroll', bouger, { passive: true }); bouger();
+  }
   el.querySelector('[data-defiler]')?.addEventListener('click', e => { e.preventDefault(); document.getElementById('portfolio')?.scrollIntoView({ behavior: 'smooth' }); });
 }
 

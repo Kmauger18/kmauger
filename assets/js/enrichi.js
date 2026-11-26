@@ -1,8 +1,8 @@
 // Blocs calculés à partir des données du site : à la une, chiffres, derniers projets,
 // technologies, thèmes photo, univers. Ils se mettent à jour quand la base est chargée.
-import { livresCourants, STATUTS_LIVRE } from './livres.js?v=202611260824';
-import { albumsCourants, photosCourantes } from './albums.js?v=202611260824';
-import { projetsCourants, carteProjet, STATUTS, lienProjet } from './projets.js?v=202611260824';
+import { livresCourants, STATUTS_LIVRE } from './livres.js?v=202611260848';
+import { albumsCourants, photosCourantes } from './albums.js?v=202611260848';
+import { projetsCourants, carteProjet, STATUTS, lienProjet } from './projets.js?v=202611260848';
 
 const esc = t => String(t ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const fmt = t => esc(t).replace(/\*([^*\n]+)\*/g, '<em>$1</em>').replace(/\n/g, '<br>');

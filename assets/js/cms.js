@@ -1,11 +1,11 @@
 // Contenu géré depuis l'espace de gestion (dépôt kmauger_gestion, base Firebase).
 // Tant que Firebase n'est pas configuré ou que la base est vide, le site garde
 // le contenu écrit dans index.html : ce fichier ne change alors rien.
-import { firebaseConfig, firebaseActif, FIREBASE_SDK } from '../../firebase-config.js?v=202611260824';
-import { definirLivres } from './livres.js?v=202611260824';
-import { definirProjets } from './projets.js?v=202611260824';
-import { definirAlbums, definirPhotos } from './albums.js?v=202611260824';
-import './enrichi.js?v=202611260824';
+import { firebaseConfig, firebaseActif, FIREBASE_SDK } from '../../firebase-config.js?v=202611260848';
+import { definirLivres } from './livres.js?v=202611260848';
+import { definirProjets } from './projets.js?v=202611260848';
+import { definirAlbums, definirPhotos } from './albums.js?v=202611260848';
+import './enrichi.js?v=202611260848';
 
 const esc = t => String(t ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 // *mot* → italique, retour à la ligne → <br>
