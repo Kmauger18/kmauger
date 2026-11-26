@@ -1,7 +1,8 @@
 // Blocs calculés à partir des données du site : à la une, chiffres, derniers projets,
 // technologies, thèmes photo, univers. Ils se mettent à jour quand la base est chargée.
-import { livresCourants, STATUTS_LIVRE } from './livres.js?v=202611252110';
-import { projetsCourants, carteProjet, STATUTS, lienProjet } from './projets.js?v=202611252110';
+import { livresCourants, STATUTS_LIVRE } from './livres.js?v=202611260824';
+import { albumsCourants, photosCourantes } from './albums.js?v=202611260824';
+import { projetsCourants, carteProjet, STATUTS, lienProjet } from './projets.js?v=202611260824';
 
 const esc = t => String(t ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const fmt = t => esc(t).replace(/\*([^*\n]+)\*/g, '<em>$1</em>').replace(/\n/g, '<br>');
@@ -10,7 +11,7 @@ const lienSur = u => /^https?:\/\//i.test(u || '') ? u : '';
 const CAT_PHOTO = { paysages: 'Paysages', lumieres: 'Lumières', atmospheres: 'Atmosphères', portraits: 'Portraits', macro: 'Macro', urbain: 'Urbain', autres: 'Autres' };
 
 const stat = (n, label) => `<div class="stat"><b>${esc(n)}</b><span>${esc(label)}</span></div>`;
-const nbPhotos = () => document.querySelectorAll('#galerie-photos .shot').length;
+const nbPhotos = () => photosCourantes().length;
 const nbCosplays = () => document.querySelectorAll('#liste-cosplay article').length;
 const technos = reals => {
   const m = new Map();
@@ -90,12 +91,10 @@ function rendre() {
   }
   if ($('projets-techs')) $('projets-techs').innerHTML = technos(realisations).map(([t, n]) => `<span>${esc(t)}<small>${n}</small></span>`).join('');
 
-  // ---------- Photographie : thèmes
+  // ---------- Photographie : albums en raccourcis
   if ($('photo-themes')) {
-    const m = new Map();
-    document.querySelectorAll('#galerie-photos .shot').forEach(f => m.set(f.dataset.c, (m.get(f.dataset.c) || 0) + 1));
-    $('photo-themes').innerHTML = [...m.entries()].map(([k, n]) => `<button type="button" data-theme="${esc(k)}">${esc(CAT_PHOTO[k] || k)}<small>${n}</small></button>`).join('');
-    $('photo-themes').querySelectorAll('[data-theme]').forEach(b => b.onclick = () => window.KM?.filtrer(b.dataset.theme));
+    const al = albumsCourants(), ph = photosCourantes();
+    $('photo-themes').innerHTML = al.map(a => `<a href="photographie/${esc(a.slug)}/">${esc(a.titre)}<small>${ph.filter(p => p.album === a.id).length}</small></a>`).join('');
   }
 
   // ---------- À propos : univers

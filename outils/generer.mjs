@@ -21,6 +21,7 @@ const PROJET_FIREBASE = 'kmauger-de247';
 
 const { LIVRES_ORIGINE, slug } = await import(path.join(RACINE, 'assets/js/livres.js'));
 const { CATEGORIES_ORIGINE, REALISATIONS_ORIGINE, STATUTS_PROJET } = await import(path.join(RACINE, 'assets/js/projets.js'));
+const { ALBUMS_ORIGINE, PHOTOS_ORIGINE } = await import(path.join(RACINE, 'assets/js/albums.js'));
 
 // ---------------------------------------------------------------- Données de la base (lecture publique)
 function valeur(v) {
@@ -44,13 +45,19 @@ async function visibles(collection) {
     ...Object.fromEntries(Object.entries(x.document.fields || {}).map(([k, v]) => [k, valeur(v)])),
   })).sort((a, b) => (a.ordre || 0) - (b.ordre || 0));
 }
-let livres = LIVRES_ORIGINE, categories = CATEGORIES_ORIGINE, realisations = REALISATIONS_ORIGINE;
+let livres = LIVRES_ORIGINE, categories = CATEGORIES_ORIGINE, realisations = REALISATIONS_ORIGINE, albums = ALBUMS_ORIGINE, photos = PHOTOS_ORIGINE;
 try {
   const [l, c, r] = await Promise.all(['livres', 'projets', 'realisations'].map(visibles));
   if (l.length) livres = l;
   if (c.length && r.length) { categories = c; realisations = r; }
   console.log(`Base : ${l.length} livre(s), ${c.length} catégorie(s), ${r.length} projet(s)`);
 } catch (e) { console.warn('Base injoignable, contenu d’origine utilisé :', e.message); }
+try {
+  const [a, ph] = await Promise.all(['albums', 'photos'].map(visibles));
+  if (a.length) { albums = a; photos = ph; }
+  console.log(`Base : ${a.length} album(s), ${ph.length} photo(s)`);
+} catch (e) { console.warn('Albums non lus dans la base, albums d’origine utilisés :', e.message); }
+albums = albums.map(a => ({ ...a, slug: slug(a.titre) }));
 livres = livres.map(l => ({ ...l, slug: slug(l.titre) }));
 categories = categories.map(c => ({ ...c, slug: slug(c.titre) }));
 realisations = realisations.map(r => ({ ...r, slug: slug(r.titre) }));
@@ -105,7 +112,7 @@ function page({ route, id, titre, description, image, imageAlt, jsonld, type = '
 const pages = [
   page({ route: '', id: 'accueil', titre: 'KMAUGER. — Kéliann Mauger : livres, photographie, projets numériques et cosplay', description: 'L’univers créatif de Kéliann Mauger : romans, photographie, sites et applications, cosplay.', jsonld: { ...PERSONNE, image: OG_DEFAUT, description: 'Auteur, photographe, créateur de sites et d’applications, cosplayeur.', sameAs: ['https://www.instagram.com/kmauger18/', 'https://www.instagram.com/kmauger.studio/'] } }),
   page({ route: 'livres', id: 'livres', titre: 'Livres & écriture — Kéliann Mauger', description: court(`Les romans de Kéliann Mauger : ${livres.map(l => l.titre).join(', ')}.`), image: absolu('assets/img/livres/banniere-livres.jpg') }),
-  page({ route: 'photographie', id: 'photographie', titre: 'Photographie — KMAUGER.', description: 'La galerie photo de Kéliann Mauger : paysages, lumières et atmosphères.' }),
+  page({ route: 'photographie', id: 'photographie', titre: 'Photographie — KMAUGER.', description: court(`Les albums photo de Kéliann Mauger : ${albums.map(a => a.titre).join(', ')}. Portraits, lumières et atmosphères.`), image: albums[0] ? absolu(albums[0].partage || albums[0].couverture) : undefined }),
   page({ route: 'projets', id: 'projets', titre: 'Projets numériques — KMAUGER.', description: court(`Sites web, applications et jeux créés par Kéliann Mauger : ${realisations.map(r => r.titre).join(', ')}.`), image: absolu('assets/img/projets/banniere-projets.jpg') }),
   page({ route: 'cosplay', id: 'cosplay', titre: 'Cosplay — KMAUGER.', description: 'Les cosplays de Kéliann Mauger : du choix du personnage à la fabrication et au shooting.' }),
   page({ route: 'a-propos', id: 'apropos', titre: 'À propos — Kéliann Mauger', description: 'Qui est Kéliann Mauger : auteur, photographe, créateur numérique et cosplayeur.', jsonld: { '@type': 'ProfilePage', mainEntity: { ...PERSONNE, sameAs: ['https://www.instagram.com/kmauger18/', 'https://www.instagram.com/kmauger.studio/'] } } }),
@@ -118,6 +125,16 @@ for (const l of livres) {
     titre: `${l.titre} — Kéliann Mauger`, description: court(l.description || l.accroche),
     image: absolu(l.couverture), imageAlt: `Couverture de ${l.titre}`,
     jsonld: { '@type': 'Book', name: l.titre, author: PERSONNE, inLanguage: 'fr', genre: l.genre || undefined, bookFormat: 'https://schema.org/Paperback', numberOfPages: l.pages ? Number(l.pages) : undefined, isbn: l.isbn || undefined, image: absolu(l.couverture) || undefined, description: court(l.description || l.accroche, 300), url: URL_SITE + 'livres/' + l.slug + '/', offers: l.lienAmazon ? { '@type': 'Offer', url: l.lienAmazon, availability: 'https://schema.org/InStock' } : undefined },
+  }));
+}
+for (const a of albums) {
+  const ph = photos.filter(p => p.album === a.id);
+  pages.push(page({
+    route: 'photographie/' + a.slug, id: 'album', type: 'article',
+    titre: `${a.titre} — Album photo de Kéliann Mauger`, description: court(`${a.sousTitre ? a.sousTitre + '. ' : ''}${a.description || ''}`),
+    image: absolu(a.partage || a.couverture), imageAlt: `Album ${a.titre}`,
+    jsonld: { '@type': 'ImageGallery', name: a.titre, description: court(a.description, 300), author: PERSONNE, url: URL_SITE + 'photographie/' + a.slug + '/',
+      image: ph.map(p => ({ '@type': 'ImageObject', contentUrl: absolu(p.hdUrl || p.apercu) || undefined, caption: p.legende || undefined, creator: PERSONNE })).filter(x => x.contentUrl) },
   }));
 }
 for (const c of categories) {

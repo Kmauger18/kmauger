@@ -1,10 +1,11 @@
 // Contenu géré depuis l'espace de gestion (dépôt kmauger_gestion, base Firebase).
 // Tant que Firebase n'est pas configuré ou que la base est vide, le site garde
 // le contenu écrit dans index.html : ce fichier ne change alors rien.
-import { firebaseConfig, firebaseActif, FIREBASE_SDK } from '../../firebase-config.js?v=202611252110';
-import { definirLivres } from './livres.js?v=202611252110';
-import { definirProjets } from './projets.js?v=202611252110';
-import './enrichi.js?v=202611252110';
+import { firebaseConfig, firebaseActif, FIREBASE_SDK } from '../../firebase-config.js?v=202611260824';
+import { definirLivres } from './livres.js?v=202611260824';
+import { definirProjets } from './projets.js?v=202611260824';
+import { definirAlbums, definirPhotos } from './albums.js?v=202611260824';
+import './enrichi.js?v=202611260824';
 
 const esc = t => String(t ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 // *mot* → italique, retour à la ligne → <br>
@@ -39,13 +40,6 @@ function appliquerImage(cle, src) {
 }
 
 // ---------------------------------------------------------------- Listes
-function rendrePhotos(el, photos) {
-  el.innerHTML = photos.length ? photos.map(p => `
-    <figure class="shot" tabindex="0" aria-label="Agrandir : ${esc(p.legende || CATEGORIES_PHOTO[p.categorie] || "photo")}" data-c="${esc(p.categorie)}"><div class="tile"><img src="${esc(p.apercu)}" alt="${esc(p.legende || CATEGORIES_PHOTO[p.categorie] || '')}" loading="lazy"${p.hd ? ` data-hd="${esc(p.id)}"` : ''}></div>
-    <figcaption class="card-meta"><span class="card-title">${esc(p.legende || '')}</span><span class="num">${esc(CATEGORIES_PHOTO[p.categorie] || '')}</span></figcaption></figure>`).join('')
-    : '<p class="soon">Les photos arrivent bientôt.</p>';
-  window.KM?.initGalerie(CATEGORIES_PHOTO);
-}
 function rendreCosplays(el, cosplays) {
   el.innerHTML = cosplays.length ? cosplays.map(c => `
     <article class="project">
@@ -84,9 +78,12 @@ async function demarrer() {
   // Livres : utilisés sur toutes les pages (accueil, fiche, à propos…)
   visibles('livres').then(definirLivres).catch(e => console.warn('Livres non chargés', e));
   const listes = [
-    ['galerie-photos', 'photos', rendrePhotos],
     ['liste-cosplay', 'cosplays', rendreCosplays],
   ];
+  // Photographie : albums et photos (utilisés aussi par l'accueil et « À propos »)
+  Promise.all([visibles('albums').catch(e => { console.warn('Albums non chargés', e); return null; }), visibles('photos')])
+    .then(([al, ph]) => { if (al && al.length) definirAlbums(al); if (ph.length || (al && al.length)) definirPhotos(ph); })
+    .catch(e => console.warn('Photos non chargées', e));
   // Projets : catégories (collection « projets ») et projets (collection « realisations »)
   Promise.all([visibles('projets'), visibles('realisations')])
     .then(([cats, reals]) => { if (cats.length && reals.length) definirProjets(cats, reals); })

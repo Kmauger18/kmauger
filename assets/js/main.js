@@ -58,9 +58,9 @@ async function ouvrir(i) {
   courant = (i + l.length) % l.length;
   const fig = l[courant], img = fig.querySelector('img');
   const cible = lb.querySelector('img');
-  cible.src = img.src;
+  cible.src = img.dataset.hdUrl || img.src;
   cible.alt = img.alt;
-  lb.querySelector('figcaption').textContent = fig.querySelector('figcaption')?.textContent.trim() || '';
+  lb.querySelector('figcaption').textContent = (fig.querySelector('.card-title')?.textContent || fig.querySelector('figcaption')?.textContent || '').trim();
   const dejaOuvert = !lb.hidden;
   lb.hidden = false;
   document.body.classList.add('lb-open');
