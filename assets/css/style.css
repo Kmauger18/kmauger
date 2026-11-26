@@ -334,3 +334,4 @@ h2.eyebrow{margin:0}
 .album-fin .btn{justify-self:start}
 @media(max-width:600px){.album-grille .shot figcaption{display:none}}
 .album-infos dd a{border-bottom:1px solid var(--gold)}.album-infos dd a small{font:500 10px var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-left:4px}
+.project-liens{display:flex;flex-wrap:wrap;gap:12px;margin-top:25px}.project-liens .btn{margin-top:0}

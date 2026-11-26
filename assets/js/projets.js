@@ -28,12 +28,23 @@ export const REALISATIONS_ORIGINE = [
     image: IMG + 'jupm-cover.jpg', captures: [IMG + 'jupm-1.jpg', IMG + 'jupm-2.jpg', IMG + 'jupm-3.jpg'], visible: true, ordre: 2,
   },
   {
-    titre: 'Mijote', categorie: 'applications', statut: 'beta', annee: '2026',
+    titre: 'Scriptorium', categorie: 'sites', statut: 'en-ligne', annee: '2026',
+    accroche: 'L’atelier d’écriture où chaque livre choisit sa façon d’être écrit, puis se met en page tout seul.',
+    description: 'Scriptorium est un atelier d’écriture qui tient dans le navigateur. On y écrit des romans SMS en bulles, comme sur un téléphone, mais aussi des journaux manuscrits, des livres ensorcelés, des dossiers d’enquête, des labyrinthes à renvois, des palimpsestes, des calligrammes ou des partitions.\n\nL’atelier s’occupe de la mise en page : prêt pour l’impression Amazon KDP, en PDF, en EPUB et même en vidéo MP4. Un roman SMS peut aussi s’écrire comme un script, ligne par ligne, et un guide complet explique toute la syntaxe. Gratuit, sans compte : les livres restent sur l’appareil.',
+    points: 'Dix types de livres, du roman SMS au livre anaglyphe\nÉcriture bulle par bulle ou par script\nMise en page Amazon KDP, PDF, EPUB et vidéo MP4\nGuide de l’atelier et prompt prêt pour l’IA\nInstallable comme une application, fonctionne hors ligne\nGratuit, sans compte, les livres restent sur l’appareil',
+    plateforme: 'Site web (installable)', technologies: 'HTML, CSS, JavaScript, IndexedDB, PWA',
+    lien: 'https://kmauger18.github.io/Scriptorium/', libelleLien: 'Voir le site',
+    lien2: 'https://kmauger18.github.io/Scriptorium/app/', libelleLien2: 'Ouvrir l’atelier',
+    image: IMG + 'scriptorium-cover.jpg', captures: [IMG + 'scriptorium-1.jpg', IMG + 'scriptorium-2.jpg', IMG + 'scriptorium-3.jpg', IMG + 'scriptorium-4.jpg'], visible: true, ordre: 3,
+  },
+  {
+    titre: 'Mijote', categorie: 'applications', statut: 'en-ligne', annee: '2026',
     accroche: 'Les repas de la semaine et une liste de courses déjà chiffrée, en une minute. 100 % gratuit.',
-    description: 'Mijote compose les menus de la semaine selon le foyer, les repas à prévoir, le régime et le budget, puis prépare la liste de courses classée par rayon, avec le prix de chaque article dans le supermarché choisi.\n\nLes prix viennent de relevés réels en magasin, et une marge de sécurité réglable évite les mauvaises surprises en caisse. Plus de 1 100 recettes, une recherche par nom ou par ingrédient, et la possibilité de créer ses propres recettes.',
-    points: 'Menus de la semaine composés selon le budget\nListe de courses chiffrée et classée par rayon\nPrix réels relevés en magasin (Open Prices)\n1 187 recettes, dont des petits-déjeuners et 372 végétariennes\nRecherche et création de recettes\nTout reste sur le téléphone, sans compte',
-    plateforme: 'Android', technologies: 'HTML, CSS, JavaScript, Capacitor',
-    lien: '', libelleLien: '',
+    description: 'Mijote compose les menus de la semaine selon le foyer, les repas à prévoir, le régime et le budget, puis prépare la liste de courses classée par rayon, avec le prix de chaque article dans le supermarché choisi.\n\nLes prix viennent de relevés réels en magasin, et une marge de sécurité réglable évite les mauvaises surprises en caisse. Plus de 1 300 recettes, une recherche par nom ou par ingrédient, et la possibilité de créer ses propres recettes.',
+    points: 'Menus de la semaine composés selon le budget\nListe de courses chiffrée et classée par rayon\nPrix réels relevés en magasin (Open Prices) et prix moyens INSEE\nPlus de 1 300 recettes, dont des petits-déjeuners et des plats végétariens\nRecherche et création de recettes\nSur le web avec un compte synchronisé, ou en appli Android',
+    plateforme: 'Web et Android', technologies: 'HTML, CSS, JavaScript, Firebase, Capacitor',
+    lien: 'https://kmauger18.github.io/mijote/', libelleLien: 'Ouvrir Mijote (web)',
+    lien2: 'https://github.com/Kmauger18/mijote/releases/latest/download/Mijote.apk', libelleLien2: 'Télécharger l’APK Android',
     image: IMG + 'mijote-cover.jpg', captures: [IMG + 'mijote-1.jpg', IMG + 'mijote-2.jpg', IMG + 'mijote-3.jpg', IMG + 'mijote-4.jpg', IMG + 'mijote-5.jpg'], visible: true, ordre: 1,
   },
   {
@@ -127,7 +138,8 @@ function rendreProjet() {
   if (!r) { el.innerHTML = `<section class="wrap page-hero"><a class="back" href="projets/">← Projets numériques</a><h1 class="display">Projet<br><em>introuvable.</em></h1></section>`; return; }
   const c = categories.find(x => x.id === r.categorie);
   document.title = r.titre + ' — KMAUGER.';
-  const lien = lienSur(r.lien);
+  const lien = lienSur(r.lien), lien2 = lienSur(r.lien2);
+  const estApk = u => /\.apk(\?|$)/i.test(u);
   const captures = (r.captures || []).filter(Boolean);
   const points = String(r.points || '').split('\n').map(s => s.trim()).filter(Boolean);
   const infos = [['Catégorie', c?.titre], ['Plateforme', r.plateforme], ['Technologies', r.technologies], ['Année', r.annee], ['Statut', STATUTS_PROJET[r.statut]]].filter(([, v]) => v);
@@ -141,7 +153,10 @@ function rendreProjet() {
           <h1 class="book-title">${esc(r.titre)}</h1>
           ${STATUTS_PROJET[r.statut] ? `<span class="pill ${r.statut === 'en-ligne' ? 'disponible' : ''}">${STATUTS_PROJET[r.statut]}</span>` : ''}
           ${r.accroche ? `<p class="project-hook">${fmt(r.accroche)}</p>` : ''}
-          ${lien ? `<a class="btn btn-solid" href="${esc(lien)}" target="_blank" rel="noopener">${esc(r.libelleLien || 'Voir le projet')} <span>↗</span></a>` : ''}
+          ${lien || lien2 ? `<div class="project-liens">
+            ${lien ? `<a class="btn btn-solid" href="${esc(lien)}"${estApk(lien) ? ' download' : ' target="_blank" rel="noopener"'}>${esc(r.libelleLien || 'Voir le projet')} <span>${estApk(lien) ? '↓' : '↗'}</span></a>` : ''}
+            ${lien2 ? `<a class="btn" href="${esc(lien2)}"${estApk(lien2) ? ' download' : ' target="_blank" rel="noopener"'}>${esc(r.libelleLien2 || 'Voir aussi')} <span>${estApk(lien2) ? '↓' : '↗'}</span></a>` : ''}
+          </div>` : ''}
         </div>
       </div>
       ${r.image ? `<div class="project-hero"><img src="${esc(r.image)}" alt="${esc(r.titre)}"></div>` : ''}
