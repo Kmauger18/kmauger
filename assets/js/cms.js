@@ -1,11 +1,11 @@
 // Contenu géré depuis l'espace de gestion (dépôt kmauger_gestion, base Firebase).
 // Tant que Firebase n'est pas configuré ou que la base est vide, le site garde
 // le contenu écrit dans index.html : ce fichier ne change alors rien.
-import { firebaseConfig, firebaseActif, FIREBASE_SDK } from '../../firebase-config.js?v=202611261850';
-import { definirLivres } from './livres.js?v=202611261850';
-import { definirProjets } from './projets.js?v=202611261850';
-import { definirAlbums, definirPhotos } from './albums.js?v=202611261850';
-import './enrichi.js?v=202611261850';
+import { firebaseConfig, firebaseActif, FIREBASE_SDK } from '../../firebase-config.js?v=202611270816';
+import { definirLivres } from './livres.js?v=202611270816';
+import { definirProjets, completerProjets } from './projets.js?v=202611270816';
+import { definirAlbums, definirPhotos } from './albums.js?v=202611270816';
+import './enrichi.js?v=202611270816';
 
 const esc = t => String(t ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 // *mot* → italique, retour à la ligne → <br>
@@ -86,7 +86,7 @@ async function demarrer() {
     .catch(e => console.warn('Photos non chargées', e));
   // Projets : catégories (collection « projets ») et projets (collection « realisations »)
   Promise.all([visibles('projets'), visibles('realisations')])
-    .then(([cats, reals]) => { if (cats.length && reals.length) definirProjets(cats, reals); })
+    .then(([cats, reals]) => { if (cats.length && reals.length) definirProjets(cats, completerProjets(cats, reals, liens.exists() ? liens.data().majContenu : 0)); })
     .catch(e => console.warn('Projets non chargés', e));
 
   await Promise.all(listes.map(async ([idEl, col, rendre]) => {

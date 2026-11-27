@@ -82,6 +82,33 @@ function preparer(cats, reals) {
 }
 preparer(CATEGORIES_ORIGINE, REALISATIONS_ORIGINE);
 
+// ---------------------------------------------------------------- Nouveautés pas encore dans la base
+// Tant que l'espace de gestion n'a pas écrit la mise à jour v4 dans la base (contenu/liens.majContenu < 4),
+// le site affiche quand même Scriptorium et les liens de Mijote. Ensuite, seule la base fait foi.
+export function completerProjets(cats, reals, majContenu = 0) {
+  if ((Number(majContenu) || 0) >= 4) return reals;
+  const norm = t => String(t || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+  const origine = t => REALISATIONS_ORIGINE.find(x => norm(x.titre) === norm(t));
+  const out = reals.map(x => ({ ...x }));
+  const sc = origine('Scriptorium');
+  if (sc && !out.some(x => norm(x.titre) === 'scriptorium')) {
+    const catOrigine = CATEGORIES_ORIGINE.find(c => c.id === sc.categorie);
+    const cat = cats.find(c => norm(c.titre) === norm(catOrigine?.titre));
+    if (cat) out.push({ ...sc, id: 'origine-scriptorium', categorie: cat.id, ordre: Math.max(0, ...out.filter(x => x.categorie === cat.id).map(x => Number(x.ordre) || 0)) + 1 });
+  }
+  const mij = origine('Mijote'), x = out.find(r => norm(r.titre) === 'mijote');
+  if (mij && x) {
+    if (!x.lien) Object.assign(x, { lien: mij.lien, libelleLien: mij.libelleLien });
+    if (!x.lien2) Object.assign(x, { lien2: mij.lien2, libelleLien2: mij.libelleLien2 });
+    if (x.statut === 'beta') x.statut = mij.statut;
+    if (x.plateforme === 'Android') x.plateforme = mij.plateforme;
+    if (x.technologies === 'HTML, CSS, JavaScript, Capacitor') x.technologies = mij.technologies;
+    if (/1 187 recettes/.test(x.points || '')) x.points = mij.points;
+    if (/Plus de 1 100 recettes/.test(x.description || '')) x.description = mij.description;
+  }
+  return out.sort((a, b) => (Number(a.ordre) || 0) - (Number(b.ordre) || 0));
+}
+
 export function lienProjet(r) { const c = categories.find(x => x.id === r.categorie); return c ? `projets/${c.slug}/${r.slug}/` : 'projets/'; }
 const route = () => (typeof document !== 'undefined' && document.body.dataset.route) || '';
 const deCategorie = c => realisations.filter(r => r.categorie === c.id);

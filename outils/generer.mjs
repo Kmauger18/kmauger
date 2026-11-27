@@ -20,7 +20,7 @@ if (!URL_SITE.endsWith('/')) URL_SITE += '/';
 const PROJET_FIREBASE = 'kmauger-de247';
 
 const { LIVRES_ORIGINE, slug } = await import(path.join(RACINE, 'assets/js/livres.js'));
-const { CATEGORIES_ORIGINE, REALISATIONS_ORIGINE, STATUTS_PROJET } = await import(path.join(RACINE, 'assets/js/projets.js'));
+const { CATEGORIES_ORIGINE, REALISATIONS_ORIGINE, STATUTS_PROJET, completerProjets } = await import(path.join(RACINE, 'assets/js/projets.js'));
 const { ALBUMS_ORIGINE, PHOTOS_ORIGINE } = await import(path.join(RACINE, 'assets/js/albums.js'));
 
 // ---------------------------------------------------------------- Données de la base (lecture publique)
@@ -49,7 +49,11 @@ let livres = LIVRES_ORIGINE, categories = CATEGORIES_ORIGINE, realisations = REA
 try {
   const [l, c, r] = await Promise.all(['livres', 'projets', 'realisations'].map(visibles));
   if (l.length) livres = l;
-  if (c.length && r.length) { categories = c; realisations = r; }
+  if (c.length && r.length) {
+    let maj = 0;
+    try { const d = await (await fetch(`https://firestore.googleapis.com/v1/projects/${PROJET_FIREBASE}/databases/(default)/documents/contenu/liens`)).json(); maj = valeur(d.fields?.majContenu) || 0; } catch (e) {}
+    categories = c; realisations = completerProjets(c, r, maj);
+  }
   console.log(`Base : ${l.length} livre(s), ${c.length} catégorie(s), ${r.length} projet(s)`);
 } catch (e) { console.warn('Base injoignable, contenu d’origine utilisé :', e.message); }
 try {
